@@ -131,7 +131,7 @@ public class CompatibleMaterial {
             case WHEAT:
                 return XMaterial.WHEAT_SEEDS;
             case BAMBOO:
-                return XMaterial.BAMBOO_SAPLING;
+                return XMaterial.BAMBOO;
             default:
                 return null;
         }
