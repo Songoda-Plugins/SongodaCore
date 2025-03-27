@@ -110,7 +110,7 @@ public abstract class SongodaPlugin extends JavaPlugin {
             dependencies.add(new Dependency("https://repo1.maven.org/maven2", "com;h2database", "h2", "1.4.200", false,
                     new Relocation("org;h2", "com;craftaro;third_party;org;h2")) // Custom relocation if the package names not match with the groupId
             );
-            dependencies.add(new Dependency("https://repo1.maven.org/maven2", "com;github;cryptomorin", "XSeries", "12.1.0", false,
+            dependencies.add(new Dependency("https://repo1.maven.org/maven2", "com;github;cryptomorin", "XSeries", "13.1.0", false,
                     new Relocation("com;cryptomorin;xseries", "com;craftaro;third_party;com;cryptomorin;xseries")) // Custom relocation if the package names not match with the groupId
             );
 
