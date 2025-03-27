@@ -6,7 +6,7 @@
 
     <groupId>com.craftaro</groupId>
     <artifactId>CraftaroCore-Modules</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- Run 'mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y.Z' to update version recursively -->
