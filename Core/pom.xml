@@ -35,7 +35,7 @@
                     <injections>
                         <injection>
                             <value>${project.version}</value>
-                            <pointCut>com.craftaro.core.CraftaroCoreConstants.getCoreVersion</pointCut>
+                            <pointCut>com.songoda.core.CraftaroCoreConstants.getCoreVersion</pointCut>
                         </injection>
                     </injections>
                 </configuration>
@@ -77,7 +77,7 @@
 
                             <artifactSet>
                                 <includes>
-                                    <include>com.craftaro:*</include>
+                                    <include>com.songoda:*</include>
 
                                     <include>de.tr7zw:item-nbt-api</include>
                                     <include>de.tr7zw:nbt-injector</include>
@@ -103,67 +103,67 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.zaxxer</pattern>
-                                    <shadedPattern>com.craftaro.third_party.com.zaxxer</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.com.zaxxer</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.de.tr7zw.nbtapi</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.de.tr7zw.nbtapi</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>de.tr7zw.nbtinjector</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.de.tr7zw.nbtinjector</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.de.tr7zw.nbtinjector</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>net.kyori</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.net.kyori</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.net.kyori</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.apache.commons</pattern>
-                                    <shadedPattern>com.craftaro.third_party.org.apache.commons</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.org.apache.commons</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.reactivestreams</pattern>
-                                    <shadedPattern>com.craftaro.third_party.org.reactivestreams</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.org.reactivestreams</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.jooq</pattern>
-                                    <shadedPattern>com.craftaro.third_party.org.jooq</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.org.jooq</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.mariadb.jdbc</pattern>
-                                    <shadedPattern>com.craftaro.third_party.org.mariadb.jdbc</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.org.mariadb.jdbc</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.h2</pattern>
-                                    <shadedPattern>com.craftaro.third_party.org.h2</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.org.h2</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>com.cryptomorin.xseries</pattern>
-                                    <shadedPattern>com.craftaro.third_party.com.cryptomorin.xseries</shadedPattern>
+                                    <shadedPattern>com.songoda.third_party.com.cryptomorin.xseries</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>me.lucko.jarrelocator</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.me.lucko.jarrelocator</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.me.lucko.jarrelocator</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>com.georgev22.api</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.com.georgev22.api</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.com.georgev22.api</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.objectweb.asm</pattern>
-                                    <shadedPattern>com.craftaro.core.third_party.org.objectweb.asm</shadedPattern>
+                                    <shadedPattern>com.songoda.core.third_party.org.objectweb.asm</shadedPattern>
                                 </relocation>
                             </relocations>
 
