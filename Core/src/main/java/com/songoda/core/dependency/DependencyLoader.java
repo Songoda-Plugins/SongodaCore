@@ -1,6 +1,6 @@
 package com.songoda.core.dependency;
 
-import com.songoda.core.CraftaroCoreConstants;
+import com.songoda.core.SongodaCoreConstants;
 import com.songoda.core.SongodaCore;
 import com.georgev22.api.libraryloader.ClassLoaderAccess;
 import com.georgev22.api.libraryloader.LibraryLoader;
@@ -33,7 +33,7 @@ public class DependencyLoader {
         if (parentClassLoader instanceof URLClassLoader) {
             this.libraryLoader = new LibraryLoader(
                     (URLClassLoader) parentClassLoader,
-                    new File(plugin.getDataFolder().getParentFile(), CraftaroCoreConstants.getProjectName() + "/dependencies/v" + DEPENDENCY_VERSION),
+                    new File(plugin.getDataFolder().getParentFile(), SongodaCoreConstants.getProjectName() + "/dependencies/v" + DEPENDENCY_VERSION),
                     SongodaCore.getLogger()
             );
             this.parentClassLoaderAccess = new ClassLoaderAccess((URLClassLoader) parentClassLoader);
@@ -41,7 +41,7 @@ public class DependencyLoader {
             // We have AppClassLoader here
             this.libraryLoader = new LibraryLoader(
                     parentClassLoader,
-                    new File(plugin.getDataFolder().getParentFile(), CraftaroCoreConstants.getProjectName() + "/dependencies/v" + DEPENDENCY_VERSION),
+                    new File(plugin.getDataFolder().getParentFile(), SongodaCoreConstants.getProjectName() + "/dependencies/v" + DEPENDENCY_VERSION),
                     SongodaCore.getLogger()
             );
             this.parentClassLoaderAccess = new ClassLoaderAccess(parentClassLoader);

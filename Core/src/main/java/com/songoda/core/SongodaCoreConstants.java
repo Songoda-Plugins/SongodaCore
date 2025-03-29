@@ -7,8 +7,8 @@ package com.songoda.core;
  * <p>
  * <b>!! Manually changing the values in this class has to be considered a breaking change. !!</b>
  */
-public class CraftaroCoreConstants {
-    private CraftaroCoreConstants() {
+public class SongodaCoreConstants {
+    private SongodaCoreConstants() {
         throw new IllegalStateException("Utility class");
     }
 

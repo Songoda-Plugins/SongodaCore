@@ -1,6 +1,6 @@
 package com.songoda.core.http;
 
-import com.songoda.core.CraftaroCoreConstants;
+import com.songoda.core.SongodaCoreConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,9 +36,9 @@ public class SimpleHttpClient implements HttpClient {
     }
 
     private static String generateUserAgent() {
-        String projectName = CraftaroCoreConstants.getProjectName();
-        String version = CraftaroCoreConstants.getCoreVersion();
-        String projectUrl = CraftaroCoreConstants.getGitHubProjectUrl();
+        String projectName = SongodaCoreConstants.getProjectName();
+        String version = SongodaCoreConstants.getCoreVersion();
+        String projectUrl = SongodaCoreConstants.getGitHubProjectUrl();
 
         return projectName + "/" + version + " (+" + projectUrl + ")";
     }

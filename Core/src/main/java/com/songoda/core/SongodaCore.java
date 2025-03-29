@@ -41,10 +41,10 @@ public class SongodaCore {
 
     /**
      * @since coreRevision 6
-     * @deprecated Is being replaced by {@link CraftaroCoreConstants#getCoreVersion()} which is automatically kept up to date.
+     * @deprecated Is being replaced by {@link SongodaCoreConstants#getCoreVersion()} which is automatically kept up to date.
      */
     @Deprecated
-    private static final String coreVersion = CraftaroCoreConstants.getCoreVersion();
+    private static final String coreVersion = SongodaCoreConstants.getCoreVersion();
 
     /**
      * This is specific to the website api
@@ -69,7 +69,7 @@ public class SongodaCore {
     }
 
     public static void registerPlugin(JavaPlugin plugin, int pluginID, XMaterial icon) {
-        registerPlugin(plugin, pluginID, icon == null ? "STONE" : icon.name(), CraftaroCoreConstants.getCoreVersion());
+        registerPlugin(plugin, pluginID, icon == null ? "STONE" : icon.name(), SongodaCoreConstants.getCoreVersion());
     }
 
     public static void registerPlugin(JavaPlugin plugin, int pluginID, String icon) {
@@ -229,7 +229,7 @@ public class SongodaCore {
     }
 
     public static String getVersion() {
-        return CraftaroCoreConstants.getCoreVersion();
+        return SongodaCoreConstants.getCoreVersion();
     }
 
     /**
@@ -245,7 +245,7 @@ public class SongodaCore {
      */
     @Deprecated
     public static String getCoreLibraryVersion() {
-        return CraftaroCoreConstants.getCoreVersion();
+        return SongodaCoreConstants.getCoreVersion();
     }
 
     public static int getCoreMajorVersion() {
@@ -266,7 +266,7 @@ public class SongodaCore {
     }
 
     public static String getPrefix() {
-        return "[" + CraftaroCoreConstants.getProjectName() + "] ";
+        return "[" + SongodaCoreConstants.getProjectName() + "] ";
     }
 
     public static CoreLogger getLogger() {

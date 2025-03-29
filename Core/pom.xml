@@ -35,7 +35,7 @@
                     <injections>
                         <injection>
                             <value>${project.version}</value>
-                            <pointCut>com.songoda.core.CraftaroCoreConstants.getCoreVersion</pointCut>
+                            <pointCut>com.songoda.core.SongodaCoreConstants.getCoreVersion</pointCut>
                         </injection>
                     </injections>
                 </configuration>

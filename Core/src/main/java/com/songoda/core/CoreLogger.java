@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public final class CoreLogger extends Logger {
     private static final CoreLogger INSTANCE = new CoreLogger();
 
-    private final String corePrefix = "[" + CraftaroCoreConstants.getProjectName() + "] ";
+    private final String corePrefix = "[" + SongodaCoreConstants.getProjectName() + "] ";
     private String pluginPrefix = "";
 
     private CoreLogger() {
