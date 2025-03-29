@@ -2,31 +2,20 @@ package com.songoda.core.core;
 
 import com.songoda.core.SongodaCore;
 import com.songoda.core.commands.AbstractCommand;
-import com.songoda.core.compatibility.ClassMapping;
 import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.nms.Nms;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class SongodaCoreDiagCommand extends AbstractCommand {
     private final DecimalFormat decimalFormat = new DecimalFormat("##.##");
 
-    private Object nmsServerInstance;
-    private Field recentTpsOnNmsServer;
-
     public SongodaCoreDiagCommand() {
         super(CommandType.CONSOLE_OK, "diag");
-
-        try {
-            this.nmsServerInstance = ClassMapping.MINECRAFT_SERVER.getClazz().getMethod("getServer").invoke(null);
-            this.recentTpsOnNmsServer = this.nmsServerInstance.getClass().getField("recentTps");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Override
@@ -83,16 +72,12 @@ public class SongodaCoreDiagCommand extends AbstractCommand {
     }
 
     private void sendCurrentTps(CommandSender receiver) {
-        if (this.recentTpsOnNmsServer == null) {
-            return;
-        }
-
-        try {
-            double[] tps = ((double[]) this.recentTpsOnNmsServer.get(this.nmsServerInstance));
-
-            receiver.sendMessage(String.format("TPS from last 1m, 5m, 15m: %s, %s, %s", this.decimalFormat.format(tps[0]), this.decimalFormat.format(tps[1]), this.decimalFormat.format(tps[2])));
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        }
+        double[] tps = Nms.getImplementations().getServer().getRecentTps();
+        receiver.sendMessage(String.format(
+                "TPS from last 1m, 5m, 15m: %s, %s, %s",
+                this.decimalFormat.format(tps[0]),
+                this.decimalFormat.format(tps[1]),
+                this.decimalFormat.format(tps[2])
+        ));
     }
 }

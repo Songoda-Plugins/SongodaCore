@@ -5,11 +5,13 @@ import com.songoda.core.nms.entity.NMSPlayer;
 import com.songoda.core.nms.entity.NmsEntity;
 import com.songoda.core.nms.item.NmsItem;
 import com.songoda.core.nms.nbt.NBTCore;
+import com.songoda.core.nms.server.NmsServer;
 import com.songoda.core.nms.v1_16_R2.anvil.AnvilCore;
 import com.songoda.core.nms.v1_16_R2.entity.NMSPlayerImpl;
 import com.songoda.core.nms.v1_16_R2.entity.NmsEntityImpl;
 import com.songoda.core.nms.v1_16_R2.item.NmsItemImpl;
 import com.songoda.core.nms.v1_16_R2.nbt.NBTCoreImpl;
+import com.songoda.core.nms.v1_16_R2.server.NmsServerImpl;
 import com.songoda.core.nms.v1_16_R2.world.NmsWorldBorderImpl;
 import com.songoda.core.nms.v1_16_R2.world.WorldCoreImpl;
 import com.songoda.core.nms.world.NmsWorldBorder;
@@ -25,6 +27,7 @@ public class NmsImplementationsImpl implements NmsImplementations {
     private final com.songoda.core.nms.anvil.AnvilCore anvil;
     private final NBTCore nbt;
     private final NmsItem item;
+    private final NmsServer server;
 
     public NmsImplementationsImpl() {
         this.entity = new NmsEntityImpl();
@@ -34,6 +37,7 @@ public class NmsImplementationsImpl implements NmsImplementations {
         this.anvil = new AnvilCore();
         this.nbt = new NBTCoreImpl();
         this.item = new NmsItemImpl();
+        this.server = new NmsServerImpl();
     }
 
     @Override
@@ -69,5 +73,10 @@ public class NmsImplementationsImpl implements NmsImplementations {
     @Override
     public @NotNull NmsItem getItem() {
         return this.item;
+    }
+
+    @Override
+    public @NotNull NmsServer getServer() {
+        return this.server;
     }
 }
