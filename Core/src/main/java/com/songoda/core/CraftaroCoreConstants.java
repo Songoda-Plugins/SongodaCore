@@ -17,10 +17,10 @@ public class CraftaroCoreConstants {
     }
 
     public static String getProjectName() {
-        return "CraftaroCore";
+        return "SongodaCore";
     }
 
     public static String getGitHubProjectUrl() {
-        return "https://github.com/craftaro/SongodaCore";
+        return "https://github.com/Songoda-Plugins/SongodaCore";
     }
 }

@@ -9,8 +9,8 @@ permissions: read-all
 
 env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_ORGANIZATION: craftaro
-  SONAR_PROJECT_KEY: craftaro_CraftaroCore
+  SONAR_ORGANIZATION: songoda
+  SONAR_PROJECT_KEY: songoda_SongodaCore
 
 jobs:
   Analyze:

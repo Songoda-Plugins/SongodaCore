@@ -26,7 +26,7 @@ public class H2Connector implements DatabaseConnector {
 
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("org.h2.Driver");
-        config.setJdbcUrl("jdbc:h2:./db_test/CraftaroCoreTest;AUTO_RECONNECT=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE");
+        config.setJdbcUrl("jdbc:h2:./db_test/SongodaCoreTest;AUTO_RECONNECT=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE");
         config.setUsername(username);
         config.setPassword(password);
         config.setMaximumPoolSize(poolSize);

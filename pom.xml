@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.craftaro</groupId>
-    <artifactId>CraftaroCore-Modules</artifactId>
+    <groupId>com.songoda</groupId>
+    <artifactId>SongodaCore-Modules</artifactId>
     <version>3.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -59,13 +59,13 @@
     </modules>
 
     <issueManagement>
-        <url>https://github.com/craftaro/SongodaCore/issues</url>
+        <url>https://github.com/Songoda-Plugins/SongodaCore/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/craftaro/SongodaCore</url>
-        <connection>scm:git:git://github.com/craftaro/SongodaCore.git</connection>
+        <url>https://github.com/Songoda-Plugins/SongodaCore</url>
+        <connection>scm:git:git://github.com/Songoda-Plugins/SongodaCore.git</connection>
     </scm>
 
     <build>

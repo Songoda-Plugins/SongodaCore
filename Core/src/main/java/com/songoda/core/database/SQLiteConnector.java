@@ -18,7 +18,7 @@ public class SQLiteConnector implements DatabaseConnector {
 
     SQLiteConnector() {
         this.plugin = null;
-        this.connectionString = "jdbc:sqlite:" + "." + File.separator + "db_test" + File.separator + "CraftaroCoreTestSQLite.db";
+        this.connectionString = "jdbc:sqlite:" + "." + File.separator + "db_test" + File.separator + "SongodaCoreTestSQLite.db";
     }
 
     public SQLiteConnector(Plugin plugin) {
