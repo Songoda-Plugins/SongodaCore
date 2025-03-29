@@ -181,11 +181,8 @@ public class ItemUtils {
                     mc_NBTTagCompound_set = MethodMapping.MC_NBT_TAG_COMPOUND__SET.getMethod(mc_NBTTagCompound);
                     mc_NBTTagCompound_remove = MethodMapping.MC_NBT_TAG_COMPOUND__REMOVE.getMethod(mc_NBTTagCompound);
                 }
-//                mc_NBTTagCompound_setShort = MethodMapping.MC_NBT_TAG_COMPOUND__SET_SHORT.getMethod(mc_NBTTagCompound);
-//                mc_NBTTagCompound_setString = MethodMapping.MC_NBT_TAG_COMPOUND__SET_STRING.getMethod(mc_NBTTagCompound);
                 cb_CraftItemStack_asNMSCopy = MethodMapping.CB_ITEM_STACK__AS_NMS_COPY.getMethod(cb_ItemStack);
                 cb_CraftItemStack_asCraftMirror = MethodMapping.CB_ITEM_STACK__AS_CRAFT_MIRROR.getMethod(cb_ItemStack);
-//                mc_NBTTagList_add = MethodMapping.MC_NBT_TAG_LIST__ADD.getMethod(mc_NBTTagList);
             } catch (Exception ex) {
                 Logger.getLogger(ItemUtils.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -236,20 +233,6 @@ public class ItemUtils {
                 }
                 // set to have a fake enchantment
                 Object enchantmentList = mc_NBTTagList.newInstance();
-                /*
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-                    // Servers from 1.13 and up change the id to a string
-                    Object fakeEnchantment = mc_NBTTagCompound.newInstance();
-                    mc_NBTTagCompound_setString.invoke(fakeEnchantment, "id", "glow:glow");
-                    mc_NBTTagCompound_setShort.invoke(fakeEnchantment, "lvl", (short) 0);
-                    mc_NBTTagList_add.invoke(enchantmentList, fakeEnchantment);
-                } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
-                    // Servers from 1.11 and up require *something* in the enchantment field
-                    Object fakeEnchantment = mc_NBTTagCompound.newInstance();
-                    mc_NBTTagCompound_setShort.invoke(fakeEnchantment, "id", (short) 245);
-                    mc_NBTTagCompound_setShort.invoke(fakeEnchantment, "lvl", (short) 1);
-                    mc_NBTTagList_add.invoke(enchantmentList, fakeEnchantment);
-                }//*/
                 mc_NBTTagCompound_set.invoke(tag, "ench", enchantmentList);
                 mc_ItemStack_setTag.invoke(nmsStack, tag);
                 item = (ItemStack) cb_CraftItemStack_asCraftMirror.invoke(null, nmsStack);
