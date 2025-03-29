@@ -5,11 +5,11 @@ import com.songoda.core.compatibility.MethodMapping;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.nms.Nms;
 import com.songoda.core.nms.world.NmsWorldBorder;
-import com.songoda.core.utils.NMSUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -61,7 +61,7 @@ public class SWorldBorder {
 
             if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                 Object nmsWorld = MethodMapping.CB_GENERIC__GET_HANDLE.getMethod(ClassMapping.CRAFT_WORLD.getClazz()).invoke(centerLocation.getWorld());
-                NMSUtils.setField(worldBorder, "world", nmsWorld, false);
+                setFieldUsingReflections(worldBorder, "world", nmsWorld);
             }
 
             Method setCenter = MethodMapping.WORLD_BOARDER__SET_CENTER.getMethod(ClassMapping.WORLD_BORDER.getClazz());
@@ -94,6 +94,17 @@ public class SWorldBorder {
                 Nms.getImplementations().getPlayer().sendPacket(player, packet);
             }
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void setFieldUsingReflections(Object object, String fieldName, Object fieldValue) {
+        try {
+            Field field = object.getClass().getField(fieldName);
+            field.setAccessible(true);
+
+            field.set(object, fieldValue);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
