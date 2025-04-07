@@ -1,7 +1,7 @@
 package com.songoda.core.lootables.loot;
 
 import com.songoda.core.SongodaCore;
-import com.craftaro.ultimatestacker.api.UltimateStackerApi;
+import com.songoda.ultimatestacker.api.UltimateStackerApi;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;

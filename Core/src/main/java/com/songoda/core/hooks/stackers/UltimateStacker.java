@@ -1,8 +1,8 @@
 package com.songoda.core.hooks.stackers;
 
 import com.songoda.core.SongodaPlugin;
-import com.craftaro.ultimatestacker.api.UltimateStackerApi;
-import com.craftaro.ultimatestacker.api.stack.entity.EntityStack;
+import com.songoda.ultimatestacker.api.UltimateStackerApi;
+import com.songoda.ultimatestacker.api.stack.entity.EntityStack;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;

@@ -1,9 +1,9 @@
 package com.songoda.core.hooks.protection;
 
 import com.songoda.core.SongodaPlugin;
-import com.craftaro.ultimateclaims.UltimateClaims;
-import com.craftaro.ultimateclaims.claim.Claim;
-import com.craftaro.ultimateclaims.member.ClaimPerm;
+import com.songoda.ultimateclaims.UltimateClaims;
+import com.songoda.ultimateclaims.claim.Claim;
+import com.songoda.ultimateclaims.member.ClaimPerm;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
