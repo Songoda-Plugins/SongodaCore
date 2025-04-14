@@ -27,7 +27,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@master
+    - uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@main
       with:
         maven_username: ${{ inputs.maven_username }}
         maven_password: ${{ inputs.maven_password }}
