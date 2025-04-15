@@ -31,6 +31,9 @@ import org.bukkit.craftbukkit.v1_21_R4.block.data.CraftBlockData;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class WorldCoreImpl implements WorldCore {
     @Override
     public SSpawner getSpawner(CreatureSpawner spawner) {
@@ -54,9 +57,16 @@ public class WorldCoreImpl implements WorldCore {
 
     @Override
     public BBaseSpawner getBaseSpawner(CreatureSpawner spawner) throws NoSuchFieldException, IllegalAccessException {
-        Object cTileEntity = ReflectionUtils.getFieldValue(spawner, "tileEntity");
+        Object nmsBlockEntity;
+        try {
+            Method getBlockEntity = spawner.getClass().getMethod("getBlockEntity");
+            nmsBlockEntity = getBlockEntity.invoke(spawner);
+        } catch (NoSuchMethodException | InvocationTargetException ex) {
+            // fallback for non-Paper servers
+            nmsBlockEntity = ReflectionUtils.getFieldValue(spawner, "tileEntity");
+        }
 
-        return new BBaseSpawnerImpl(spawner, ((SpawnerBlockEntity) cTileEntity).getSpawner());
+        return new BBaseSpawnerImpl(spawner, ((SpawnerBlockEntity) nmsBlockEntity).getSpawner());
     }
 
     /**
