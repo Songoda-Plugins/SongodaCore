@@ -281,6 +281,10 @@ public class SongodaCore {
         return INSTANCE == null ? null : INSTANCE.piggybackedPlugin;
     }
 
+    public static SongodaPlugin getSongodaPlugin() {
+        return (SongodaPlugin) getHijackedPlugin();
+    }
+
     public static SongodaCore getInstance() {
         return INSTANCE;
     }

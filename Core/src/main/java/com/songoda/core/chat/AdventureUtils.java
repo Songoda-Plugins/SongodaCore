@@ -1,5 +1,7 @@
 package com.songoda.core.chat;
 
+import com.songoda.core.SongodaCore;
+import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.ServerVersion;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -13,6 +15,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -33,6 +36,7 @@ public class AdventureUtils {
     private static Method getLoreMethod = null;
     private static Object gsonComponentSerializer;
     private static Method gsonDeserializeMethod;
+
 
     static {
         if (ServerProject.isServer(ServerProject.PAPER) && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_18)) {
@@ -137,11 +141,9 @@ public class AdventureUtils {
         }
     }
 
-    public static void sendMessage(Plugin plugin, Component message, CommandSender... target) {
-        try (BukkitAudiences bukkitAudiences = BukkitAudiences.create(plugin)) {
-            for (CommandSender sender : target) {
-                bukkitAudiences.sender(sender).sendMessage(message);
-            }
+    public static void sendMessage(Component message, CommandSender... target) {
+        for (CommandSender sender : target) {
+            SongodaCore.getSongodaPlugin().getBukkitAudiences().sender(sender).sendMessage(message);
         }
     }
 
@@ -456,7 +458,7 @@ public class AdventureUtils {
     }
 
     //Bukkit defaults for time
-    public static Title createTitle (Component title, Component subtitle) {
+    public static Title createTitle(Component title, Component subtitle) {
         return Title.title(title, subtitle, Title.Times.times(
                 Duration.of(10 * 50L, ChronoUnit.MILLIS),
                 Duration.of(70 * 50L, ChronoUnit.MILLIS),
@@ -464,7 +466,7 @@ public class AdventureUtils {
         ));
     }
     // times in ticks
-    public static Title createTitle (Component title, Component subtitle, int fadeIn, int stay, int fadeOut) {
+    public static Title createTitle(Component title, Component subtitle, int fadeIn, int stay, int fadeOut) {
         return Title.title(title, subtitle, Title.Times.times(
                 Duration.of(fadeIn * 50L, ChronoUnit.MILLIS),
                 Duration.of(stay * 50L, ChronoUnit.MILLIS),
@@ -476,15 +478,11 @@ public class AdventureUtils {
         return Title.title(title, subtitle, times);
     }
 
-    public static void sendTitle(JavaPlugin hijackedPlugin, Title title, CommandSender sender) {
-        try (BukkitAudiences bukkitAudiences = BukkitAudiences.create(hijackedPlugin)) {
-            bukkitAudiences.sender(sender).showTitle(title);
-        }
+    public static void sendTitle(Title title, Player player) {
+        SongodaCore.getSongodaPlugin().getBukkitAudiences().player(player).showTitle(title);
     }
 
-    public static void sendActionBar(JavaPlugin hijackedPlugin, Component message, CommandSender sender) {
-        try (BukkitAudiences bukkitAudiences = BukkitAudiences.create(hijackedPlugin)) {
-            bukkitAudiences.sender(sender).sendActionBar(message);
-        }
+    public static void sendActionBar(Component message, Player player) {
+        SongodaCore.getSongodaPlugin().getBukkitAudiences().player(player).sendActionBar(message);
     }
 }

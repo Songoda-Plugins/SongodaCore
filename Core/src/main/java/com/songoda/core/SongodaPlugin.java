@@ -11,6 +11,8 @@ import com.songoda.core.hooks.HookRegistryManager;
 import com.songoda.core.locale.Locale;
 import com.songoda.core.utils.Metrics;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -37,6 +39,8 @@ public abstract class SongodaPlugin extends JavaPlugin {
     private boolean emergencyStop = false;
 
     private final HookRegistryManager hookRegistryManager = new HookRegistryManager(this);
+
+    protected BukkitAudiences bukkitAudiences;
 
     static {
         MinecraftVersion.getLogger().setLevel(Level.WARNING);
@@ -128,11 +132,11 @@ public abstract class SongodaPlugin extends JavaPlugin {
     public final void onEnable() {
         if (this.emergencyStop) {
             setEnabled(false);
-
             return;
         }
 
         CommandSender console = Bukkit.getConsoleSender();
+        this.bukkitAudiences = BukkitAudiences.create(this);
 
         console.sendMessage(" "); // blank line to separate chatter
         console.sendMessage(ChatColor.GREEN + "=============================");
@@ -179,6 +183,9 @@ public abstract class SongodaPlugin extends JavaPlugin {
         }
 
         CommandSender console = Bukkit.getConsoleSender();
+        if (this.bukkitAudiences != null) {
+            this.bukkitAudiences.close();
+        }
 
         console.sendMessage(" "); // blank line to separate chatter
         console.sendMessage(ChatColor.GREEN + "=============================");
@@ -198,6 +205,16 @@ public abstract class SongodaPlugin extends JavaPlugin {
 
         console.sendMessage(ChatColor.GREEN + "=============================");
         console.sendMessage(" "); // blank line to separate chatter
+    }
+
+    /**
+     * Get the BukkitAudiences instance for this plugin.
+     * This is used for sending messages to players using Adventure.
+     *
+     * @return the BukkitAudiences instance
+     */
+    public @NotNull BukkitAudiences getBukkitAudiences() {
+        return bukkitAudiences; //If the plugin is loaded properly, it should not be null, if it did not load, it won't be used anyway
     }
 
     public Locale getLocale() {

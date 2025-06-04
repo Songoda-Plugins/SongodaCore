@@ -61,7 +61,7 @@ public class MainCommand extends AbstractCommand {
         if (this.header != null) {
             sender.sendMessage(this.header);
         } else {
-            AdventureUtils.sendMessage(SongodaCore.getHijackedPlugin(), AdventureUtils.formatComponent(
+            AdventureUtils.sendMessage(AdventureUtils.formatComponent(
                     String.format("<color:#ff8080>&l%s &8» &7Version %s Created with <3 by <b><i><gradient:#ec4e74:#f4c009>Songoda</gradient>",
                             this.plugin.getDescription().getName(),
                             this.plugin.getDescription().getVersion()
@@ -97,7 +97,7 @@ public class MainCommand extends AbstractCommand {
                                     cmd.getPermissionNode() == null ? "" : cmd.getPermissionNode()
                             )
                     );
-                    AdventureUtils.sendMessage(SongodaCore.getHijackedPlugin(), component, sender);
+                    AdventureUtils.sendMessage(component, sender);
                 }
             }
         }
