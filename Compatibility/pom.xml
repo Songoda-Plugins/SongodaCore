@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.craftaro</groupId>
-        <artifactId>CraftaroCore-Modules</artifactId>
-        <version>3.6.0-SNAPSHOT</version>
+        <groupId>com.songoda</groupId>
+        <artifactId>SongodaCore-Modules</artifactId>
+        <version>3.9.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>CraftaroCore-Compatibility</artifactId>
+    <artifactId>SongodaCore-Compatibility</artifactId>
 
     <repositories>
         <repository>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>11.2.1</version>
+            <version>13.2.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

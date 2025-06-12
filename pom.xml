@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.craftaro</groupId>
-    <artifactId>CraftaroCore-Modules</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
+    <groupId>com.songoda</groupId>
+    <artifactId>SongodaCore-Modules</artifactId>
+    <version>3.9.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- Run 'mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y.Z' to update version recursively -->
@@ -26,6 +26,9 @@
 
         <module>NMS/NMS</module>
         <module>NMS/NMS-API</module>
+        <module>NMS/NMS-v1_21_R4</module>
+        <module>NMS/NMS-v1_21_R3</module>
+        <module>NMS/NMS-v1_21_R2</module>
         <module>NMS/NMS-v1_21_R1</module>
         <module>NMS/NMS-v1_20_R4</module>
         <module>NMS/NMS-v1_20_R3</module>
@@ -56,13 +59,13 @@
     </modules>
 
     <issueManagement>
-        <url>https://github.com/craftaro/SongodaCore/issues</url>
+        <url>https://github.com/Songoda-Plugins/SongodaCore/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/craftaro/SongodaCore</url>
-        <connection>scm:git:git://github.com/craftaro/SongodaCore.git</connection>
+        <url>https://github.com/Songoda-Plugins/SongodaCore</url>
+        <connection>scm:git:git://github.com/Songoda-Plugins/SongodaCore.git</connection>
     </scm>
 
     <build>
@@ -148,7 +151,7 @@
 
         <repository>
             <id>PaperMC</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
         <repository>

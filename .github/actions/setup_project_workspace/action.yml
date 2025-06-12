@@ -27,7 +27,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: craftaro/GH-Commons/.github/actions/setup_workspace@master
+    - uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@main
       with:
         maven_username: ${{ inputs.maven_username }}
         maven_password: ${{ inputs.maven_password }}
@@ -56,7 +56,7 @@ runs:
 
     - uses: SpraxDev/Action-SpigotMC@v5
       with:
-        versions: 1.20.6, 1.21.1
+        versions: 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5
         remapped: true
         sftpCacheHost: ${{ inputs.spigot_buildtools_sftp_host }}
         sftpCachePort: ${{ inputs.spigot_buildtools_sftp_port }}
