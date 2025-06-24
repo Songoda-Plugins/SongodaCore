@@ -6,7 +6,7 @@
 
     <groupId>com.songoda</groupId>
     <artifactId>SongodaCore-Modules</artifactId>
-    <version>3.9.2-SNAPSHOT</version>
+    <version>3.9.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- Run 'mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y.Z' to update version recursively -->
