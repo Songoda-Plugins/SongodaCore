@@ -1,4 +1,4 @@
-package com.songoda.core.v1_12_5R.item;
+package com.songoda.core.v1_21_5R.item;
 
 import com.songoda.core.nms.item.NmsItem;
 import net.minecraft.util.RandomSource;

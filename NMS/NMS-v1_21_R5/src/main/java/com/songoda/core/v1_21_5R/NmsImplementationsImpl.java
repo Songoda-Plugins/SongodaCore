@@ -1,4 +1,4 @@
-package com.songoda.core.v1_12_5R;
+package com.songoda.core.v1_21_5R;
 
 import com.songoda.core.nms.NmsImplementations;
 import com.songoda.core.nms.entity.NMSPlayer;
@@ -8,14 +8,14 @@ import com.songoda.core.nms.nbt.NBTCore;
 import com.songoda.core.nms.server.NmsServer;
 import com.songoda.core.nms.world.NmsWorldBorder;
 import com.songoda.core.nms.world.WorldCore;
-import com.songoda.core.v1_12_5R.anvil.AnvilCore;
-import com.songoda.core.v1_12_5R.entity.NMSPlayerImpl;
-import com.songoda.core.v1_12_5R.entity.NmsEntityImpl;
-import com.songoda.core.v1_12_5R.item.NmsItemImpl;
-import com.songoda.core.v1_12_5R.nbt.NBTCoreImpl;
-import com.songoda.core.v1_12_5R.server.NmsServerImpl;
-import com.songoda.core.v1_12_5R.world.NmsWorldBorderImpl;
-import com.songoda.core.v1_12_5R.world.WorldCoreImpl;
+import com.songoda.core.v1_21_5R.anvil.AnvilCore;
+import com.songoda.core.v1_21_5R.entity.NMSPlayerImpl;
+import com.songoda.core.v1_21_5R.entity.NmsEntityImpl;
+import com.songoda.core.v1_21_5R.item.NmsItemImpl;
+import com.songoda.core.v1_21_5R.nbt.NBTCoreImpl;
+import com.songoda.core.v1_21_5R.server.NmsServerImpl;
+import com.songoda.core.v1_21_5R.world.NmsWorldBorderImpl;
+import com.songoda.core.v1_21_5R.world.WorldCoreImpl;
 import org.jetbrains.annotations.NotNull;
 
 public class NmsImplementationsImpl implements NmsImplementations {
