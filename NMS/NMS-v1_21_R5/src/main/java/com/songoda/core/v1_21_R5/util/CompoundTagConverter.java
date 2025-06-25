@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.util;
+package com.songoda.core.v1_21_R5.util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;

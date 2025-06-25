@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.world;
+package com.songoda.core.v1_21_R5.world;
 
 import com.songoda.core.nms.ReflectionUtils;
 import com.songoda.core.nms.world.BBaseSpawner;
@@ -6,7 +6,7 @@ import com.songoda.core.nms.world.SItemStack;
 import com.songoda.core.nms.world.SSpawner;
 import com.songoda.core.nms.world.SWorld;
 import com.songoda.core.nms.world.WorldCore;
-import com.songoda.core.v1_21_5R.world.spawner.BBaseSpawnerImpl;
+import com.songoda.core.v1_21_R5.world.spawner.BBaseSpawnerImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;

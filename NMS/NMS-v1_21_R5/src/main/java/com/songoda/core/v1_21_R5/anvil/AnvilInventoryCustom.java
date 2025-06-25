@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.anvil;
+package com.songoda.core.v1_21_R5.anvil;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AnvilMenu;

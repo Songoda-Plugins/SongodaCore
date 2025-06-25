@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.server;
+package com.songoda.core.v1_21_R5.server;
 
 import com.songoda.core.nms.server.NmsServer;
 import org.bukkit.Bukkit;

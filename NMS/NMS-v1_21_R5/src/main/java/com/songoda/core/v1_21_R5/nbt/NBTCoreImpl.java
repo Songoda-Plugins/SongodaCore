@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.nbt;
+package com.songoda.core.v1_21_R5.nbt;
 
 import com.songoda.core.nms.nbt.NBTCore;
 import com.songoda.core.nms.nbt.NBTEntity;

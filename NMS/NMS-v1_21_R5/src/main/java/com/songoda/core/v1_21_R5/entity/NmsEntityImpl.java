@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.entity;
+package com.songoda.core.v1_21_R5.entity;
 
 import com.songoda.core.nms.entity.NmsEntity;
 import net.minecraft.world.entity.Mob;

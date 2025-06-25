@@ -1,7 +1,7 @@
-package com.songoda.core.v1_21_5R.nbt;
+package com.songoda.core.v1_21_R5.nbt;
 
 import com.songoda.core.nms.nbt.NBTEntity;
-import com.songoda.core.v1_21_5R.util.CompoundTagConverter;
+import com.songoda.core.v1_21_R5.util.CompoundTagConverter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

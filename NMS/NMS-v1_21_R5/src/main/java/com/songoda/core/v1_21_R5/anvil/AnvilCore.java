@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.anvil;
+package com.songoda.core.v1_21_R5.anvil;
 
 import com.songoda.core.nms.anvil.CustomAnvil;
 import net.minecraft.server.level.ServerPlayer;

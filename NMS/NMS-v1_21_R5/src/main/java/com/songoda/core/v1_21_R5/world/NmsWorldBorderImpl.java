@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_5R.world;
+package com.songoda.core.v1_21_R5.world;
 
 import com.songoda.core.nms.world.NmsWorldBorder;
 import net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket;
