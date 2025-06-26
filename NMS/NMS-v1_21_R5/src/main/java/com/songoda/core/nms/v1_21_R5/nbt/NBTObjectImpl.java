@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_R5.nbt;
+package com.songoda.core.nms.v1_21_R5.nbt;
 
 import com.songoda.core.nms.nbt.NBTCompound;
 import com.songoda.core.nms.nbt.NBTObject;

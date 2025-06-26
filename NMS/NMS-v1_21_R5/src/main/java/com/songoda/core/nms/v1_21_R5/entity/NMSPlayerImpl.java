@@ -1,4 +1,4 @@
-package com.songoda.core.v1_21_R5.entity;
+package com.songoda.core.nms.v1_21_R5.entity;
 
 import com.mojang.authlib.properties.Property;
 import com.songoda.core.nms.entity.NMSPlayer;

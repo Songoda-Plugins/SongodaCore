@@ -1,11 +1,11 @@
-package com.songoda.core.v1_21_R5.world;
+package com.songoda.core.nms.v1_21_R5.world;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.CompatibleParticleHandler;
 import com.songoda.core.nms.world.SSpawner;
 import com.songoda.core.nms.world.SpawnedEntity;
-import com.songoda.core.v1_21_R5.util.CompoundTagConverter;
+import com.songoda.core.nms.v1_21_R5.util.CompoundTagConverter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
