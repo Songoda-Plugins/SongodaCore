@@ -180,11 +180,16 @@ public class GuiManager {
             }
 
             Inventory openInv = event.getInventory();
+            final Player player = (Player) event.getWhoClicked();
             Gui gui;
             if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder
                     && ((GuiHolder) openInv.getHolder()).manager.uuid.equals(this.manager.uuid)) {
                 gui = ((GuiHolder) openInv.getHolder()).getGUI();
 
+                // Call the GUI's drag handler
+                gui.onDrag(this.manager, player, event);
+
+                // Check for locked cells and cancel if necessary
                 if (event.getRawSlots().stream()
                         .filter(slot -> gui.inventory.getSize() > slot)
                         .anyMatch(slot -> !gui.unlockedCells.getOrDefault(slot, false))) {

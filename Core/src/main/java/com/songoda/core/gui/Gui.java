@@ -4,11 +4,13 @@ import com.songoda.core.chat.AdventureUtils;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.gui.events.GuiClickEvent;
 import com.songoda.core.gui.events.GuiCloseEvent;
+import com.songoda.core.gui.events.GuiDragEvent;
 import com.songoda.core.gui.events.GuiDropItemEvent;
 import com.songoda.core.gui.events.GuiOpenEvent;
 import com.songoda.core.gui.events.GuiPageEvent;
 import com.songoda.core.gui.methods.Clickable;
 import com.songoda.core.gui.methods.Closable;
+import com.songoda.core.gui.methods.Draggable;
 import com.songoda.core.gui.methods.Droppable;
 import com.songoda.core.gui.methods.Openable;
 import com.songoda.core.gui.methods.Pagable;
@@ -16,10 +18,12 @@ import com.songoda.core.utils.ItemUtils;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import net.kyori.adventure.text.Component;
+import org.apache.commons.lang3.function.TriConsumer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -61,6 +65,7 @@ public class Gui {
     protected Openable opener = null;
     protected Closable closer = null;
     protected Droppable dropper = null;
+    protected Draggable draggable = null;
     protected Pagable pager = null;
     protected XSound defaultSound = XSound.UI_BUTTON_CLICK;
 
@@ -693,6 +698,12 @@ public class Gui {
     }
 
     @NotNull
+    public Gui setOnDrag(@Nullable Draggable action) {
+        this.draggable = action;
+        return this;
+    }
+
+    @NotNull
     public Gui setOnPage(@Nullable Pagable action) {
         this.pager = action;
         return this;
@@ -941,6 +952,15 @@ public class Gui {
 
     protected boolean onClickPlayerInventory(@NotNull GuiManager manager, @NotNull Player player, @NotNull Inventory openInv, InventoryClickEvent event) {
         // no events for this yet
+        return false;
+    }
+
+    protected boolean onDrag(@NotNull GuiManager manager, @NotNull Player player, @NotNull InventoryDragEvent event) {
+        if (this.draggable != null) {
+            this.draggable.onDrag(new GuiDragEvent(manager, this, player, event));
+            return true;
+        }
+
         return false;
     }
 
