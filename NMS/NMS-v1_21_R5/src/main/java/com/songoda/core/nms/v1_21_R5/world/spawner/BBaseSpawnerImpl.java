@@ -1,7 +1,7 @@
-package com.songoda.core.v1_21_R5.world.spawner;
+package com.songoda.core.nms.v1_21_R5.world.spawner;
 
 import com.songoda.core.nms.world.BBaseSpawner;
-import com.songoda.core.v1_21_R5.util.CompoundTagConverter;
+import com.songoda.core.nms.v1_21_R5.util.CompoundTagConverter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
