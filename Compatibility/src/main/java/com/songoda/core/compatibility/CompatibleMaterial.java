@@ -101,6 +101,8 @@ public class CompatibleMaterial {
                 return XMaterial.WHEAT;
             case BAMBOO:
                 return XMaterial.BAMBOO;
+            case SWEET_BERRY_BUSH:
+                return XMaterial.SWEET_BERRIES;
             default:
                 return null;
         }
