@@ -101,6 +101,8 @@ public class CompatibleMaterial {
                 return XMaterial.WHEAT;
             case BAMBOO:
                 return XMaterial.BAMBOO;
+            case SWEET_BERRY_BUSH:
+                return XMaterial.SWEET_BERRIES;
             default:
                 return null;
         }
@@ -132,6 +134,8 @@ public class CompatibleMaterial {
                 return XMaterial.WHEAT_SEEDS;
             case BAMBOO:
                 return XMaterial.BAMBOO;
+            case SWEET_BERRY_BUSH:
+                return XMaterial.SWEET_BERRIES;
             default:
                 return null;
         }

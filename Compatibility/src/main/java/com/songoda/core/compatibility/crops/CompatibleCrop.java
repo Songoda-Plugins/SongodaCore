@@ -30,6 +30,9 @@ public class CompatibleCrop {
     }
 
     public static boolean isCrop(@Nullable XMaterial material) {
+        if (material == XMaterial.SWEET_BERRY_BUSH) {
+            return true;
+        }
         return material != null && XBlock.isCrop(material);
     }
 
@@ -52,6 +55,7 @@ public class CompatibleCrop {
         switch (CompatibleMaterial.getMaterial(crop.getType()).get()) {
             case BEETROOTS:
             case NETHER_WART:
+            case SWEET_BERRY_BUSH:
                 return 3;
             default:
                 return 7;
