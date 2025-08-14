@@ -238,4 +238,87 @@ public class TextUtils {
 
         return decoder.decode(data, CharBuffer.allocate(data.capacity()), true).isUnderflow();
     }
+
+    public static List<String> formatLore(String text, String delimiter) {
+        List<String> lore = new ArrayList<>();
+
+        if (text == null || text.isEmpty()) {
+            return lore;
+        }
+
+        // Split first, then format each line to preserve placeholder processing
+        String[] parts = text.split(delimiter);
+        String lastColor = "";
+
+        for (String line : parts) {
+            if (line != null) {
+                String trimmedLine = line.trim();
+                if (!trimmedLine.isEmpty()) {
+                    // Format each line individually to ensure placeholders are processed
+                    String formattedLine = formatText(lastColor + trimmedLine);
+                    lore.add(formattedLine);
+
+                    // Extract the last color code for the next line
+                    lastColor = ChatColor.getLastColors(formattedLine);
+                } else {
+                    // Add empty lines as-is (useful for spacing in lore)
+                    lore.add("");
+                }
+            }
+        }
+
+        return lore;
+    }
+
+    public static List<String> formatLore(String text) {
+        return formatLore(text, "\\|");
+    }
+
+    public static String formatTextSafe(String text, boolean preserveEmpty) {
+        if (text == null) {
+            return preserveEmpty ? "" : null;
+        }
+
+        if (text.isEmpty()) {
+            return "";
+        }
+
+        try {
+            return ChatColor.translateAlternateColorCodes('&', text);
+        } catch (Exception e) {
+            // Fallback: return original text if formatting fails
+            return text;
+        }
+    }
+
+    public static String formatTextSafe(String text) {
+        return formatTextSafe(text, true);
+    }
+
+    public static List<String> formatLore(String text, String delimiter, java.util.Map<String, String> placeholders) {
+        if (text == null || text.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Process placeholders first
+        String processedText = text;
+        if (placeholders != null) {
+            for (java.util.Map.Entry<String, String> entry : placeholders.entrySet()) {
+                String placeholder = "%" + entry.getKey() + "%";
+                processedText = processedText.replace(placeholder, entry.getValue() != null ? entry.getValue() : "");
+            }
+        }
+
+        return formatLore(processedText, delimiter);
+    }
+
+    public static List<String> formatLore(String text, String delimiter, String placeholderKey, String placeholderValue) {
+        java.util.Map<String, String> placeholders = new java.util.HashMap<>();
+        placeholders.put(placeholderKey, placeholderValue);
+        return formatLore(text, delimiter, placeholders);
+    }
+
+    public static List<String> formatLore(String text, String placeholderKey, String placeholderValue) {
+        return formatLore(text, "\\|", placeholderKey, placeholderValue);
+    }
 }
