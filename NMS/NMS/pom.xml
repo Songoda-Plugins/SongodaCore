@@ -24,6 +24,12 @@
         <!-- Need to include all NMS modules here -->
         <dependency>
             <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_21_R6</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
             <artifactId>SongodaCore-NMS-v1_21_R5</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
