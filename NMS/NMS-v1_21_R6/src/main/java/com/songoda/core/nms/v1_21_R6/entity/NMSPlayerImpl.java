@@ -27,7 +27,7 @@ public class NMSPlayerImpl implements NMSPlayer {
     public GameProfile createProfile(UUID id, String name, @Nullable String textureValue, @Nullable String textureSignature) {
         com.mojang.authlib.GameProfile profile = new com.mojang.authlib.GameProfile(id, name);
         if (textureValue != null) {
-            profile.getProperties().put("textures", new Property("textures", textureValue, textureSignature));
+            profile.properties().put("textures", new Property("textures", textureValue, textureSignature));
         }
 
         return wrapProfile(profile);
@@ -36,7 +36,7 @@ public class NMSPlayerImpl implements NMSPlayer {
     private GameProfile wrapProfile(com.mojang.authlib.GameProfile profile) {
         String textureValue = null;
         String textureSignature = null;
-        for (Property property : profile.getProperties().get("textures")) {
+        for (Property property : profile.properties().get("textures")) {
             if (property.name().equals("textures")) {
                 textureValue = property.value();
                 textureSignature = property.signature();
@@ -45,10 +45,10 @@ public class NMSPlayerImpl implements NMSPlayer {
 
         return new GameProfile(
                 profile,
-                new ResolvableProfile(profile),
+                ResolvableProfile.createResolved(profile),
 
-                profile.getId(),
-                profile.getName(),
+                profile.id(),
+                profile.name(),
                 textureValue,
                 textureSignature
         );
