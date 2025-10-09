@@ -1,9 +1,7 @@
 package com.songoda.core.nms.entity.player;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class GameProfile {
@@ -18,43 +16,47 @@ public class GameProfile {
     public GameProfile(
             Object mojangGameProfile,
             @Nullable Object mojangResolvableGameProfile,
-
             UUID id,
             String name,
             @Nullable String textureValue,
             @Nullable String textureSignature
     ) {
-        this.mojangGameProfile = Objects.requireNonNull(mojangGameProfile);
+        this.mojangGameProfile = mojangGameProfile;
         this.mojangResolvableGameProfile = mojangResolvableGameProfile;
-
-
-        this.id = Objects.requireNonNull(id);
-        this.name = Objects.requireNonNull(name);
+        this.id = id;
+        this.name = name;
         this.textureValue = textureValue;
         this.textureSignature = textureSignature;
     }
 
     public Object getMojangGameProfile() {
-        return this.mojangGameProfile;
+        return mojangGameProfile;
     }
 
-    public @Nullable Object getMojangResolvableGameProfile() {
-        return this.mojangResolvableGameProfile;
+    @Nullable
+    public Object getMojangResolvableGameProfile() {
+        return mojangResolvableGameProfile;
     }
 
-    public @NotNull UUID getId() {
-        return this.id;
+    public UUID getId() {
+        return id;
     }
 
-    public @NotNull String getName() {
-        return this.name;
+    public String getName() {
+        return name;
     }
 
-    public @Nullable String getTextureValue() {
-        return this.textureValue;
+    @Nullable
+    public String getTextureValue() {
+        return textureValue;
     }
 
-    public @Nullable String getTextureSignature() {
-        return this.textureSignature;
+    @Nullable
+    public String getTextureSignature() {
+        return textureSignature;
+    }
+
+    public boolean hasTexture() {
+        return textureValue != null;
     }
 }

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.songoda</groupId>
         <artifactId>SongodaCore-Modules</artifactId>
-        <version>3.9.7-SNAPSHOT</version>
+        <version>3.9.8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>SongodaCore-NMS</artifactId>
@@ -22,6 +22,12 @@
         </dependency>
 
         <!-- Need to include all NMS modules here -->
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_21_R6</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <version>${project.version}</version>
             <artifactId>SongodaCore-NMS-v1_21_R5</artifactId>
