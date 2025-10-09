@@ -16,7 +16,8 @@ public class NmsWorldBorderImpl implements NmsWorldBorder {
         Objects.requireNonNull(center.getWorld());
 
         WorldBorder worldBorder = new WorldBorder();
-        worldBorder.world = ((CraftWorld) center.getWorld()).getHandle();
+        // We don't need this now.
+        // worldBorder.world = ((CraftWorld) center.getWorld()).getHandle();
 
         worldBorder.setCenter(center.getX(), center.getZ());
         worldBorder.setSize(size);

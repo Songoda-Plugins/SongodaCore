@@ -19,36 +19,47 @@ public class NMSPlayerImpl implements NMSPlayer {
 
     @Override
     public GameProfile getProfile(Player p) {
-        com.mojang.authlib.GameProfile profile = ((CraftPlayer) p).getHandle().getGameProfile();
-        return wrapProfile(profile);
+        com.mojang.authlib.GameProfile mojangProfile = ((CraftPlayer) p).getHandle().getGameProfile();
+        return wrapProfile(mojangProfile);
     }
 
     @Override
     public GameProfile createProfile(UUID id, String name, @Nullable String textureValue, @Nullable String textureSignature) {
-        com.mojang.authlib.GameProfile profile = new com.mojang.authlib.GameProfile(id, name);
-        if (textureValue != null) {
-            profile.getProperties().put("textures", new Property("textures", textureValue, textureSignature));
+        if (textureValue == null) {
+            return wrapProfile(new com.mojang.authlib.GameProfile(id, name));
         }
+
+        com.google.common.collect.Multimap<String, Property> properties = com.google.common.collect.ArrayListMultimap.create();
+        properties.put("textures", new Property("textures", textureValue,
+            textureSignature != null ? textureSignature : ""));
+
+
+        com.mojang.authlib.GameProfile profile = new com.mojang.authlib.GameProfile(
+            id,
+            name,
+            new com.mojang.authlib.properties.PropertyMap(properties)
+        );
 
         return wrapProfile(profile);
     }
 
-    private GameProfile wrapProfile(com.mojang.authlib.GameProfile profile) {
+    private GameProfile wrapProfile(com.mojang.authlib.GameProfile mojangProfile) {
         String textureValue = null;
         String textureSignature = null;
-        for (Property property : profile.getProperties().get("textures")) {
+        for (Property property : mojangProfile.properties().get("textures")) {
             if (property.name().equals("textures")) {
                 textureValue = property.value();
                 textureSignature = property.signature();
             }
         }
 
-        return new GameProfile(
-                profile,
-                new ResolvableProfile(profile),
+        ResolvableProfile resolvableProfile = ResolvableProfile.createResolved(mojangProfile);
 
-                profile.getId(),
-                profile.getName(),
+        return new GameProfile(
+                mojangProfile,
+                resolvableProfile,
+                mojangProfile.id(),
+                mojangProfile.name(),
                 textureValue,
                 textureSignature
         );

@@ -75,7 +75,7 @@ public class WorldCoreImpl implements WorldCore {
     @Override
     public void randomTickChunk(org.bukkit.Chunk bukkitChunk, int tickAmount) {
         LevelChunk chunk = (LevelChunk) ((CraftChunk) bukkitChunk).getHandle(ChunkStatus.FULL);
-        ServerLevel world = chunk.r;
+        ServerLevel world = (ServerLevel) chunk.getLevel();
         ChunkPos chunkCoordIntPair = chunk.getPos();
         int j = chunkCoordIntPair.getMinBlockX();
         int k = chunkCoordIntPair.getMinBlockZ();

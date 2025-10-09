@@ -23,6 +23,16 @@ public final class SkullItemCreator {
 
     private static MinecraftApiClient minecraftApiClient = new MinecraftApiClient(new SimpleHttpClient());
 
+    private static ReflectionMethod reflectionMethod = null;
+    private static Method skullMetaSetProfileMethod = null;
+    private static Field skullMetaProfileField = null;
+
+    private enum ReflectionMethod {
+        RESOLVABLE_PROFILE,  // 1.21.9+ using ResolvableProfile
+        GAME_PROFILE,        // 1.18-1.21.8 using GameProfile directly
+        FIELD_ACCESS         // Pre-1.18 or fallback using direct field access
+    }
+
     public static ItemStack byProfile(GameProfile profile) {
         ItemStack item = Objects.requireNonNull(XMaterial.PLAYER_HEAD.parseItem());
         SkullMeta meta = (SkullMeta) Objects.requireNonNull(item.getItemMeta());
@@ -81,9 +91,9 @@ public final class SkullItemCreator {
                             return createDefaultSkullForUuid(uuid);
                         }
                         return byTextureUrl(profile.getTextures().getSkin().toString());
-                    });
-        } catch (NoSuchMethodError ignored) {
-            // old spigot api version that doesn't have OfflinePlayer#getPlayerProfile()
+                    })
+                    .exceptionally(ex -> createDefaultSkullForUuid(uuid));
+        } catch (NoSuchMethodError | NoClassDefFoundError ignored) {
         }
 
         if (uuid.version() != 4) {
@@ -91,57 +101,146 @@ public final class SkullItemCreator {
         }
 
         return minecraftApiClient.fetchProfile(uuid)
-                .thenApply((profile) -> {
+                .thenApply(profile -> {
                     if (profile == null) {
                         return createDefaultSkullForUuid(uuid);
                     }
                     return byProfile(profile.createGameProfile());
-                });
+                })
+                .exceptionally(ex -> createDefaultSkullForUuid(uuid));
     }
 
-    private static Method skullMetaSetProfile = null;
-    private static Field skullMetaProfileField = null;
-    private static boolean setProfileUsesResolvable = false;
-
     private static void applyProfile(SkullMeta skullMeta, GameProfile profile) {
-        if (skullMetaSetProfile == null && profile.getMojangResolvableGameProfile() != null) {
-            try {
-                skullMetaSetProfile = skullMeta.getClass().getDeclaredMethod("setProfile", profile.getMojangResolvableGameProfile().getClass());
-                skullMetaSetProfile.setAccessible(true);
-                setProfileUsesResolvable = true;
-            } catch (ReflectiveOperationException ignored) {
-            }
+        if (reflectionMethod == null) {
+            initializeReflection(skullMeta, profile);
         }
-        if (skullMetaSetProfile == null) {
+
+        try {
+            switch (reflectionMethod) {
+                case RESOLVABLE_PROFILE: {
+                    // 1.21.9+ - Use ResolvableProfile
+                    Object resolvableProfile = profile.getMojangResolvableGameProfile();
+                    if (resolvableProfile == null) {
+                        throw new IllegalStateException("ResolvableProfile is null for 1.21.9+ version");
+                    }
+                    skullMetaSetProfileMethod.invoke(skullMeta, resolvableProfile);
+                    break;
+                }
+                case GAME_PROFILE: {
+                    // 1.18-1.21.8 - Use GameProfile directly
+                    Object gameProfile = profile.getMojangGameProfile();
+                    if (gameProfile == null) {
+                        throw new IllegalStateException("GameProfile is null");
+                    }
+                    skullMetaSetProfileMethod.invoke(skullMeta, gameProfile);
+                    break;
+                }
+                    // Pre 1.18
+                case FIELD_ACCESS: {
+                    Object toSet;
+                    Object resolvable = profile.getMojangResolvableGameProfile();
+                    Object game = profile.getMojangGameProfile();
+                    Class<?> fieldType = skullMetaProfileField.getType();
+                    if (resolvable != null && fieldType.isInstance(resolvable)) {
+                        toSet = resolvable;
+                    } else if (game != null && fieldType.isInstance(game)) {
+                        toSet = game;
+                    } else if (resolvable != null && fieldType.getName().contains("ResolvableProfile")) {
+                        toSet = resolvable;
+                    } else {
+                        toSet = game;
+                    }
+                    if (toSet == null) {
+                        throw new IllegalStateException("No compatible profile instance for field access: " + fieldType.getName());
+                    }
+                    skullMetaProfileField.set(skullMeta, toSet);
+                    break;
+                }
+            }
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            throw new RuntimeException("Failed to apply GameProfile to SkullMeta using " + reflectionMethod, ex);
+        }
+    }
+
+    private static void initializeReflection(SkullMeta skullMeta, GameProfile profile) {
+        Class<?> skullMetaClass = skullMeta.getClass();
+
+        Object resolvableProfile = profile.getMojangResolvableGameProfile();
+        if (resolvableProfile != null) {
             try {
-                skullMetaSetProfile = skullMeta.getClass().getDeclaredMethod("setProfile", profile.getMojangGameProfile().getClass());
-                skullMetaSetProfile.setAccessible(true);
-            } catch (ReflectiveOperationException ignored) {
+                // Prefer public method lookup (includes inherited)
+                skullMetaSetProfileMethod = skullMetaClass.getMethod("setProfile", resolvableProfile.getClass());
+                reflectionMethod = ReflectionMethod.RESOLVABLE_PROFILE;
+                return;
+            } catch (NoSuchMethodException ignored) {
+                for (Method m : skullMetaClass.getMethods()) {
+                    if (!m.getName().equals("setProfile") || m.getParameterCount() != 1) continue;
+                    Class<?> p0 = m.getParameterTypes()[0];
+                    if (p0.getName().contains("ResolvableProfile")) {
+                        m.setAccessible(true);
+                        skullMetaSetProfileMethod = m;
+                        reflectionMethod = ReflectionMethod.RESOLVABLE_PROFILE;
+                        return;
+                    }
+                }
+                for (Method m : skullMetaClass.getDeclaredMethods()) {
+                    if (!m.getName().equals("setProfile") || m.getParameterCount() != 1) continue;
+                    Class<?> p0 = m.getParameterTypes()[0];
+                    if (p0.getName().contains("ResolvableProfile")) {
+                        m.setAccessible(true);
+                        skullMetaSetProfileMethod = m;
+                        reflectionMethod = ReflectionMethod.RESOLVABLE_PROFILE;
+                        return;
+                    }
+                }
             }
         }
 
-        if (skullMetaSetProfile != null) {
+        Object gameProfile = profile.getMojangGameProfile();
+        if (gameProfile != null) {
             try {
-                skullMetaSetProfile.invoke(skullMeta, setProfileUsesResolvable ? profile.getMojangResolvableGameProfile() : profile.getMojangGameProfile());
-            } catch (IllegalAccessException | InvocationTargetException ex) {
-                throw new RuntimeException(ex);
-            }
-            return;
-        }
-
-        if (skullMetaProfileField == null) {
-            try {
-                skullMetaProfileField = skullMeta.getClass().getDeclaredField("profile");
-                skullMetaProfileField.setAccessible(true);
-            } catch (ReflectiveOperationException ex) {
-                throw new RuntimeException("Unable to find compatible #setProfile method or profile field", ex);
+                skullMetaSetProfileMethod = skullMetaClass.getMethod("setProfile", gameProfile.getClass());
+                reflectionMethod = ReflectionMethod.GAME_PROFILE;
+                return;
+            } catch (NoSuchMethodException ignored) {
+                for (Method m : skullMetaClass.getMethods()) {
+                    if (!m.getName().equals("setProfile") || m.getParameterCount() != 1) continue;
+                    Class<?> p0 = m.getParameterTypes()[0];
+                    if (p0.getName().contains("GameProfile")) {
+                        m.setAccessible(true);
+                        skullMetaSetProfileMethod = m;
+                        reflectionMethod = ReflectionMethod.GAME_PROFILE;
+                        return;
+                    }
+                }
+                for (Method m : skullMetaClass.getDeclaredMethods()) {
+                    if (!m.getName().equals("setProfile") || m.getParameterCount() != 1) continue;
+                    Class<?> p0 = m.getParameterTypes()[0];
+                    if (p0.getName().contains("GameProfile")) {
+                        m.setAccessible(true);
+                        skullMetaSetProfileMethod = m;
+                        reflectionMethod = ReflectionMethod.GAME_PROFILE;
+                        return;
+                    }
+                }
             }
         }
 
         try {
-            skullMetaProfileField.set(skullMeta, profile.getMojangGameProfile());
-        } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new RuntimeException("Encountered an error while setting the profile field", ex);
+            skullMetaProfileField = skullMetaClass.getDeclaredField("profile");
+            skullMetaProfileField.setAccessible(true);
+            reflectionMethod = ReflectionMethod.FIELD_ACCESS;
+        } catch (NoSuchFieldException ex) {
+            throw new RuntimeException(
+                    "Unable to find compatible method to apply GameProfile to SkullMeta.",
+                    ex
+            );
         }
+    }
+
+    public static void resetReflectionCache() {
+        reflectionMethod = null;
+        skullMetaSetProfileMethod = null;
+        skullMetaProfileField = null;
     }
 }
