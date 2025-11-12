@@ -127,6 +127,17 @@ public class DataManager {
         if (this.plugin == null) {
             return "";
         }
+
+        // Check if a custom table prefix is configured in database.yml
+        if (this.databaseConfig != null) {
+            String customPrefix = this.databaseConfig.getString("Connection Settings.Table Prefix", "");
+            if (!customPrefix.isEmpty()) {
+                // Ensure underscore at the end
+                return customPrefix.endsWith("_") ? customPrefix : customPrefix + "_";
+            }
+        }
+
+        // Default: use plugin name as prefix for backwards compatibility
         return this.plugin.getDescription().getName().toLowerCase() + '_';
     }
 

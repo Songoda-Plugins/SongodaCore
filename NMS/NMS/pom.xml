@@ -21,7 +21,8 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Need to include all NMS modules here -->
+        <!-- Commenting out version-specific NMS modules to avoid requiring all Spigot versions -->
+        <!--
         <dependency>
             <version>${project.version}</version>
             <artifactId>SongodaCore-NMS-v1_21_R6</artifactId>
@@ -208,5 +209,6 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        -->
     </dependencies>
 </project>
