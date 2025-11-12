@@ -16,3 +16,8 @@ Connection Settings:
   Pool Size: 5
   # Use SSL for remote databases
   Use SSL: false
+  # Table prefix for database tables
+  # Useful when running multiple servers sharing the same database
+  # Example: 'survival_' creates tables like 'survival_placed_hoppers' instead of 'placed_hoppers'
+  # Leave empty for no prefix (default)
+  Table Prefix: ''

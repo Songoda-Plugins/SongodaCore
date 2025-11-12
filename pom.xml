@@ -26,6 +26,8 @@
 
         <module>NMS/NMS</module>
         <module>NMS/NMS-API</module>
+        <!-- Commenting out NMS version-specific modules to avoid requiring all Spigot versions -->
+        <!--
         <module>NMS/NMS-v1_21_R6</module>
         <module>NMS/NMS-v1_21_R5</module>
         <module>NMS/NMS-v1_21_R4</module>
@@ -58,6 +60,7 @@
         <module>NMS/NMS-v1_8_R3</module>
         <module>NMS/NMS-v1_8_R2</module>
         <module>NMS/NMS-v1_8_R1</module>
+        -->
     </modules>
 
     <issueManagement>
