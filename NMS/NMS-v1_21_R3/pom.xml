@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.songoda</groupId>
         <artifactId>SongodaCore-Modules</artifactId>
-        <version>3.9.8-SNAPSHOT</version>
+        <version>3.9.9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>SongodaCore-NMS-v1_21_R3</artifactId>
