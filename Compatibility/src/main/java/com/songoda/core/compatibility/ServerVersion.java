@@ -50,7 +50,7 @@ public enum ServerVersion {
     V1_20, V1_20_1, V1_20_2, V1_20_3, V1_20_4, V1_20_5, V1_20_6,
 
     // 1.21.x
-    V1_21, V1_21_1, V1_21_2, V1_21_3, V1_21_4, V1_21_5, V1_21_6, V1_21_7, V1_21_8, V1_21_9, V1_21_10,
+    V1_21, V1_21_1, V1_21_2, V1_21_3, V1_21_4, V1_21_5, V1_21_6, V1_21_7, V1_21_8, V1_21_9, V1_21_10, V1_21_11,
 
     // 1.22.x
     V1_22,
@@ -87,6 +87,7 @@ public enum ServerVersion {
         VERSION_TO_REVISION.put("1.21.8", "v1_21_R5");
         VERSION_TO_REVISION.put("1.21.9", "v1_21_R6");
         VERSION_TO_REVISION.put("1.21.10", "v1_21_R6");
+        VERSION_TO_REVISION.put("1.21.11", "v1_21_R7");
 
         if (Bukkit.getServer() != null) {
             String srvPackage = Bukkit.getServer().getClass().getPackage().getName();
