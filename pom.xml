@@ -6,7 +6,7 @@
 
     <groupId>com.songoda</groupId>
     <artifactId>SongodaCore-Modules</artifactId>
-    <version>3.9.9-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- Run 'mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y.Z' to update version recursively -->
@@ -26,6 +26,7 @@
 
         <module>NMS/NMS</module>
         <module>NMS/NMS-API</module>
+        <module>NMS/NMS-v26_1_R1</module>
         <module>NMS/NMS-v1_21_R7</module>
         <module>NMS/NMS-v1_21_R6</module>
         <module>NMS/NMS-v1_21_R5</module>
@@ -183,6 +184,17 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.cryptomorin</groupId>
+                <artifactId>XSeries</artifactId>
+                <version>13.7.0</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -215,14 +227,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>4.11.0</version>
+            <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- bytebuddy is used by mockito; We are declaring a newer version for Java 21 support (remove if mockito supports Java 21) -->
+            <!-- bytebuddy is used by mockito; We are declaring a newer version for Java 25 support -->
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.14</version>
+            <version>1.15.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

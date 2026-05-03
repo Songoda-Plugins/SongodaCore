@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.songoda</groupId>
         <artifactId>SongodaCore-Modules</artifactId>
-        <version>3.9.9-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>SongodaCore-Compatibility</artifactId>
@@ -16,6 +16,11 @@
         <repository>
             <id>ViaVersion</id>
             <url>https://repo.viaversion.com/</url>
+        </repository>
+
+        <repository>
+            <id>songoda-third-party</id>
+            <url>https://repo.songoda.com/repository/third-party/</url>
         </repository>
     </repositories>
 
@@ -42,9 +47,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.cryptomorin</groupId>
+            <groupId>com.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>13.6.0</version>
+            <version>13.7.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

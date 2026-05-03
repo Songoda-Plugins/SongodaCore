@@ -58,13 +58,18 @@ public enum ServerVersion {
     // 1.23.x
     V1_23,
 
+    // 26.x
+    V26_1, V26_1_1, V26_1_2
+
     ;
 
     static final String serverPackageVersion;
     private static final String serverReleaseVersion;
     private static final ServerVersion serverVersion;
     private static final boolean isMocked;
-    private static final String minecraftVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
+    private static final String minecraftVersion = Bukkit.getServer() != null
+            ? extractMinecraftVersion(Bukkit.getServer().getBukkitVersion())
+            : "1.0";
 
     private static final Map<String, String> VERSION_TO_REVISION;
 
@@ -88,6 +93,9 @@ public enum ServerVersion {
         VERSION_TO_REVISION.put("1.21.9", "v1_21_R6");
         VERSION_TO_REVISION.put("1.21.10", "v1_21_R6");
         VERSION_TO_REVISION.put("1.21.11", "v1_21_R7");
+        VERSION_TO_REVISION.put("26.1", "v26_1_R1");
+        VERSION_TO_REVISION.put("26.1.1", "v26_1_R1");
+        VERSION_TO_REVISION.put("26.1.2", "v26_1_R1");
 
         if (Bukkit.getServer() != null) {
             String srvPackage = Bukkit.getServer().getClass().getPackage().getName();
@@ -215,5 +223,61 @@ public enum ServerVersion {
         }
 
         return serverVersion.ordinal() < version.ordinal();
+    }
+
+    private static String extractMinecraftVersion(String bukkitVersion) {
+        if (bukkitVersion == null || bukkitVersion.isEmpty()) {
+            return "";
+        }
+        String base = bukkitVersion.split("-")[0];
+        String[] parts = base.split("\\.");
+
+        StringBuilder out = new StringBuilder();
+        for (String part : parts) {
+            if (!part.matches("\\d+")) {
+                break;
+            }
+            if (out.length() > 0) {
+                out.append('.');
+            }
+            out.append(part);
+        }
+
+        return out.toString();
+    }
+
+    private static int[] parseVersionParts(String version) {
+        if (version == null || version.isEmpty()) {
+            return new int[0];
+        }
+
+        String cleanVersion = version.split("-")[0];
+
+        String[] parts = cleanVersion.split("\\.");
+        int[] result = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            try {
+                result[i] = Integer.parseInt(parts[i]);
+            } catch (NumberFormatException e) {
+                result[i] = 0;
+            }
+        }
+
+        return result;
+    }
+
+    private static ServerVersion getExactVersion(String version) {
+        if (version == null || version.isEmpty()) {
+            return UNKNOWN;
+        }
+
+        String versionEnum = "V" + version.replace(".", "_").split("-")[0];
+
+        try {
+            return ServerVersion.valueOf(versionEnum);
+        } catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }
