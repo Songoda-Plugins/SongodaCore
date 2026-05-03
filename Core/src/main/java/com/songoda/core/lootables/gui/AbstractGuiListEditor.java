@@ -1,11 +1,11 @@
 package com.songoda.core.lootables.gui;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.songoda.core.gui.AnvilGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.lootables.loot.Loot;
 import com.songoda.core.utils.TextUtils;
-import com.cryptomorin.xseries.XMaterial;
 
 import java.util.ArrayList;
 import java.util.Collections;
