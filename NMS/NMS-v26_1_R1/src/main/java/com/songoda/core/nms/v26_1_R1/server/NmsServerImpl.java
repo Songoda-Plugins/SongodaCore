@@ -11,13 +11,13 @@ public class NmsServerImpl implements NmsServer {
     public double[] getRecentTps() {
         try {
             return ((CraftServer) Bukkit.getServer()).getServer().recentTps;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // Paper removed recentTps field, try Bukkit.getServer().getTPS()
             try {
                 Object server = Bukkit.getServer();
                 Method getTpsMethod = server.getClass().getMethod("getTPS");
                 return (double[]) getTpsMethod.invoke(server);
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 throw new RuntimeException("Unable to get recent TPS", ex);
             }
         }
