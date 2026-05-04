@@ -18,7 +18,7 @@ public enum MethodMapping {
     MC_NBT_TAG_COMPOUND__SET_STRING("setString", "setString", "a", "a", "a", String.class, String.class),
     MC_NBT_TAG_COMPOUND__REMOVE("remove", "remove", "r", "r", "r", String.class),
 
-    MC_NBT_TAG_LIST__ADD("add", "a", "add", "a", "add", "add", ClassMapping.NBT_BASE.getClazz()),
+    MC_NBT_TAG_LIST__ADD("add", "a", "add", "a", "add", "add", "add", ClassMapping.NBT_BASE.getClazz()),
 
     MC_CHUNK__GET_WORLD("getWorld", "getWorld", "D", "D"),
 
@@ -47,11 +47,11 @@ public enum MethodMapping {
     WORLD__UPDATE_ADJACENT_COMPARATORS("updateAdjacentComparators", "c", "c", "c", ClassMapping.BLOCK_POSITION.getClazz(), ClassMapping.BLOCK.getClazz()), /* #updateNeighbourForOutputSignal */
     WORLD__GET_CHUNK_AT("getChunkAt", "d", "a", "a", int.class, int.class),
 
-    WORLD_BOARDER__SET_CENTER("setCenter", "setCenter", "setCenter", "c", "c", "c", double.class, double.class),
-    WORLD_BOARDER__SET_SIZE("setSize", "setSize", "setSize", "a", "a", "a", double.class),
-    WORLD_BOARDER__SET_WARNING_TIME("setWarningTime", "setWarningTime", "setWarningTime", "b", "b", "b", int.class),
-    WORLD_BOARDER__SET_WARNING_DISTANCE("setWarningDistance", "setWarningDistance", "setWarningDistance", "c", "c", "c", int.class), /* #setWarningBlocks */
-    WORLD_BOARDER__TRANSITION_SIZE_BETWEEN("transitionSizeBetween", "transitionSizeBetween", "transitionSizeBetween", "a", "a", "a", double.class, double.class, long.class), /* #lerpSizeBetween */
+    WORLD_BOARDER__SET_CENTER("setCenter", "setCenter", "setCenter", "c", "c", "c", "setCenter", double.class, double.class),
+    WORLD_BOARDER__SET_SIZE("setSize", "setSize", "setSize", "a", "a", "a", "setSize", double.class),
+    WORLD_BOARDER__SET_WARNING_TIME("setWarningTime", "setWarningTime", "setWarningTime", "b", "b", "b", "setWarningTime", int.class),
+    WORLD_BOARDER__SET_WARNING_DISTANCE("setWarningDistance", "setWarningDistance", "setWarningDistance", "c", "c", "c", "setWarningDistance", int.class), /* #setWarningBlocks */
+    WORLD_BOARDER__TRANSITION_SIZE_BETWEEN("transitionSizeBetween", "transitionSizeBetween", "transitionSizeBetween", "a", "a", "a", "lerpSizeBetween", double.class, double.class, long.class), /* #lerpSizeBetween */
 
     MOJANGSON_PARSER__PARSE("parse", "a", "a", "a", String.class);
 
@@ -61,9 +61,10 @@ public enum MethodMapping {
     private final String _1_18;
     private final String _1_18_2;
     private final String _1_19;
+    private final String _26_1;
     private final Class<?>[] parameters;
 
-    MethodMapping(String saneFallback, String _1_14, String _1_17, String _1_18, String _1_18_2, String _1_19, Class<?>... parameters) {
+    MethodMapping(String saneFallback, String _1_14, String _1_17, String _1_18, String _1_18_2, String _1_19, String _26_1, Class<?>... parameters) {
         this.saneFallback = saneFallback;
 
         this._1_14 = _1_14;
@@ -71,6 +72,7 @@ public enum MethodMapping {
         this._1_18 = _1_18;
         this._1_18_2 = _1_18_2;
         this._1_19 = _1_19;
+        this._26_1 = _26_1;
         this.parameters = parameters;
     }
 
@@ -82,6 +84,7 @@ public enum MethodMapping {
         this._1_18 = _1_18;
         this._1_18_2 = _1_18_2;
         this._1_19 = _1_19;
+        this._26_1 = _1_19;
         this.parameters = parameters;
     }
 
@@ -93,6 +96,7 @@ public enum MethodMapping {
         this._1_18 = _1_18;
         this._1_18_2 = _1_18_2;
         this._1_19 = _1_19;
+        this._26_1 = _1_19;
         this.parameters = parameters;
     }
 
@@ -104,6 +108,7 @@ public enum MethodMapping {
         this._1_18 = null;
         this._1_18_2 = null;
         this._1_19 = null;
+        this._26_1 = null;
         this.parameters = parameters;
     }
 
@@ -135,6 +140,10 @@ public enum MethodMapping {
                     }
 
                     break;
+                case V26_1:
+                    if (this._26_1 != null) {
+                        methodName = this._26_1;
+                    }
             }
 
             try {

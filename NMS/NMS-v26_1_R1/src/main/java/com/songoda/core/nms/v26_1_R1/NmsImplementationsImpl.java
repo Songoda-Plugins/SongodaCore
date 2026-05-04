@@ -16,6 +16,10 @@ import com.songoda.core.nms.v26_1_R1.nbt.NBTCoreImpl;
 import com.songoda.core.nms.v26_1_R1.server.NmsServerImpl;
 import com.songoda.core.nms.v26_1_R1.world.NmsWorldBorderImpl;
 import com.songoda.core.nms.v26_1_R1.world.WorldCoreImpl;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.border.WorldBorder;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class NmsImplementationsImpl implements NmsImplementations {
@@ -37,6 +41,7 @@ public class NmsImplementationsImpl implements NmsImplementations {
         this.nbt = new NBTCoreImpl();
         this.item = new NmsItemImpl();
         this.server = new NmsServerImpl();
+        BlockPos pos = new BlockPos(0, 0, 0);
     }
 
     @Override

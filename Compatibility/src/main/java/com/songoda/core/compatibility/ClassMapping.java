@@ -14,6 +14,7 @@ public enum ClassMapping {
     BLOCK_LEVER("world.level.block", "BlockLever"),
     BLOCKS("world.level.block", "Blocks"),
     BLOCK_POSITION("core", "BlockPosition"),
+    BLOCK_POSITION_26_1("core", "BlockPos"), // Added in 26.1
     CHAT_MESSAGE_TYPE("network.chat", "ChatMessageType"),
     CHUNK("world.level.chunk", "Chunk"),
     CLIENTBOUND_INITIALIZE_BORDER_PACKET("network.protocol.game", "ClientboundInitializeBorderPacket"), // Added in 1.17
@@ -73,6 +74,26 @@ public enum ClassMapping {
 
     public Class<?> getClazz(String sub) {
         String name = sub == null ? this.className : this.className + "$" + sub;
+
+        // BlockPos hack
+        if (name.equals("BlockPosition") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
+            name = "BlockPos";
+        }
+
+        // NBTTagCompound hack
+        if (name.equals("NBTTagCompound") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
+            name = "CompoundTag";
+        }
+
+        // NBTBase hack
+        if (name.equals("NBTBase") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
+            name = "Tag";
+        }
+
+        // NBTTagList hack
+        if (name.equals("NBTTagList") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
+            name = "ListTag";
+        }
 
         if (ServerProject.isServer(ServerProject.PAPER) && (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_20_5))) {
             //We don't have 1_20_R4 like packages in paper, so skip that part
