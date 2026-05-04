@@ -1,5 +1,8 @@
 package com.songoda.core.compatibility;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @deprecated Usage is highly discouraged – use com.songoda.core.nms.Nms#getImplementations() instead
  */
@@ -59,6 +62,29 @@ public enum ClassMapping {
     private final String packageName;
     private final String className;
 
+    private static final Map<String, String> V26_1_MOJANG_NAMES = new HashMap<>();
+
+    static {
+        V26_1_MOJANG_NAMES.put("BlockPosition", "BlockPos");
+        V26_1_MOJANG_NAMES.put("NBTTagCompound", "CompoundTag");
+        V26_1_MOJANG_NAMES.put("NBTBase", "Tag");
+        V26_1_MOJANG_NAMES.put("NBTTagList", "ListTag");
+        V26_1_MOJANG_NAMES.put("IBlockData", "BlockState");
+
+        V26_1_MOJANG_NAMES.put("BlockBase", "BlockBehaviour");
+        V26_1_MOJANG_NAMES.put("EntityInsentient", "Mob");
+        V26_1_MOJANG_NAMES.put("EntityPlayer", "ServerPlayer");
+        V26_1_MOJANG_NAMES.put("IChatBaseComponent", "Component");
+        V26_1_MOJANG_NAMES.put("IRegistry", "Registry");
+        V26_1_MOJANG_NAMES.put("NBTCompressedStreamTools", "NbtIo");
+        V26_1_MOJANG_NAMES.put("MojangsonParser", "TagParser");
+        V26_1_MOJANG_NAMES.put("PlayerConnection", "ServerGamePacketListenerImpl");
+        V26_1_MOJANG_NAMES.put("World", "Level");
+        V26_1_MOJANG_NAMES.put("WorldServer", "ServerLevel");
+
+        V26_1_MOJANG_NAMES.put("BlockButtonAbstract", "ButtonBlock");
+        V26_1_MOJANG_NAMES.put("BlockPressurePlateAbstract", "PressurePlateBlock");
+    }
     ClassMapping(String className) {
         this(null, className);
     }
@@ -75,24 +101,9 @@ public enum ClassMapping {
     public Class<?> getClazz(String sub) {
         String name = sub == null ? this.className : this.className + "$" + sub;
 
-        // BlockPos hack
-        if (name.equals("BlockPosition") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
-            name = "BlockPos";
-        }
-
-        // NBTTagCompound hack
-        if (name.equals("NBTTagCompound") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
-            name = "CompoundTag";
-        }
-
-        // NBTBase hack
-        if (name.equals("NBTBase") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
-            name = "Tag";
-        }
-
-        // NBTTagList hack
-        if (name.equals("NBTTagList") && ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
-            name = "ListTag";
+        // 26.1+ mappings changes
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V26_1)) {
+            name = V26_1_MOJANG_NAMES.getOrDefault(name, name);
         }
 
         if (ServerProject.isServer(ServerProject.PAPER) && (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_20_5))) {
