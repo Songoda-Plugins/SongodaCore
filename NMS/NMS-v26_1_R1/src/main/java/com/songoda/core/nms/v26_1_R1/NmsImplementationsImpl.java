@@ -41,7 +41,6 @@ public class NmsImplementationsImpl implements NmsImplementations {
         this.nbt = new NBTCoreImpl();
         this.item = new NmsItemImpl();
         this.server = new NmsServerImpl();
-        BlockPos pos = new BlockPos(0, 0, 0);
     }
 
     @Override
