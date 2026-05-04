@@ -82,7 +82,7 @@
                                     <include>de.tr7zw:item-nbt-api</include>
                                     <include>de.tr7zw:nbt-injector</include>
                                     <include>net.kyori:*</include>
-                                    <include>com.github.cryptomorin:XSeries</include>
+                                    <include>com.cryptomorin:XSeries</include>
 
                                     <include>org.apache.commons:commons-lang3</include>
                                     <include>org.apache.commons:commons-text</include>
