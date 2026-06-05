@@ -96,6 +96,8 @@
                                     <include>com.github.GeorgeV220:LibraryLoader</include>
                                     <include>org.ow2.asm:asm</include>
                                     <include>org.ow2.asm:asm-commons</include>
+
+                                    <include>io.papermc:paperlib</include>
                                 </includes>
                             </artifactSet>
 
@@ -159,6 +161,11 @@
                                     <pattern>org.objectweb.asm</pattern>
                                     <shadedPattern>com.craftaro.core.third_party.org.objectweb.asm</shadedPattern>
                                 </relocation>
+
+                                <relocation>
+                                    <pattern>io.papermc.lib</pattern>
+                                    <shadedPattern>com.craftaro.third_party.io.papermc.lib</shadedPattern>
+                                </relocation>
                             </relocations>
 
                             <filters>
@@ -202,7 +209,21 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>dev.folia</groupId>
+            <artifactId>folia-api</artifactId>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--suppress VulnerableLibrariesLocal -->
+        <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.7</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>CraftaroCore-Compatibility</artifactId>
@@ -269,13 +290,6 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>9.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
             <version>9.2</version>
             <scope>compile</scope>
         </dependency>

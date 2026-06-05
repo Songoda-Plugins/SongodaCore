@@ -1,5 +1,7 @@
 package com.craftaro.core.compatibility;
 
+import com.craftaro.core.compatibility.folia.SchedulerRunnable;
+import com.craftaro.core.compatibility.folia.SchedulerUtils;
 import com.viaversion.viaversion.api.Via;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,10 +39,13 @@ public class ClientVersion {
      */
     @Deprecated
     public static void onLoginProtocol(Player p, JavaPlugin plugin) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (p.isOnline()) {
-                final int version = protocolsupport.api.ProtocolSupportAPI.getProtocolVersion(p).getId();
-                players.put(p.getUniqueId(), protocolToVersion(version));
+        SchedulerUtils.runTaskLater(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                if (p.isOnline()) {
+                    final int version = protocolsupport.api.ProtocolSupportAPI.getProtocolVersion(p).getId();
+                    players.put(p.getUniqueId(), protocolToVersion(version));
+                }
             }
         }, 20);
     }
@@ -50,10 +55,13 @@ public class ClientVersion {
      */
     @Deprecated
     public static void onLoginVia(Player p, JavaPlugin plugin) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (p.isOnline()) {
-                final int version = Via.getAPI().getPlayerVersion(p.getUniqueId());
-                players.put(p.getUniqueId(), protocolToVersion(version));
+        SchedulerUtils.runTaskLater(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                if (p.isOnline()) {
+                    final int version = Via.getAPI().getPlayerVersion(p.getUniqueId());
+                    players.put(p.getUniqueId(), protocolToVersion(version));
+                }
             }
         }, 20);
     }

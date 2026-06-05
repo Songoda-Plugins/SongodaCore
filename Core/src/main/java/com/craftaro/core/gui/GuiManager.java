@@ -1,5 +1,7 @@
 package com.craftaro.core.gui;
 
+import com.craftaro.core.compatibility.folia.SchedulerRunnable;
+import com.craftaro.core.compatibility.folia.SchedulerUtils;
 import com.craftaro.core.compatibility.ClientVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.cryptomorin.xseries.XMaterial;
@@ -102,23 +104,29 @@ public class GuiManager {
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            Gui openInv = this.openInventories.get(player);
+        SchedulerUtils.runTaskAsynchronously(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                Gui openInv = openInventories.get(player);
 
-            if (openInv != null) {
-                openInv.open = false;
-            }
-
-            Inventory inv = gui.getOrCreateInventory(this);
-
-            Bukkit.getScheduler().runTask(this.plugin, () -> {
-                player.openInventory(inv);
-                gui.onOpen(this, player);
-
-                synchronized (this.lock) {
-                    this.openInventories.put(player, gui);
+                if (openInv != null) {
+                    openInv.open = false;
                 }
-            });
+
+                Inventory inv = gui.getOrCreateInventory(GuiManager.this);
+
+                SchedulerUtils.runTask(plugin, new SchedulerRunnable() {
+                    @Override
+                    public void run() {
+                        player.openInventory(inv);
+                        gui.onOpen(GuiManager.this, player);
+
+                        synchronized (GuiManager.this.lock) {
+                            GuiManager.this.openInventories.put(player, gui);
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -136,9 +144,12 @@ public class GuiManager {
             popup.add();
             popup.grant(player);
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
-                popup.revoke(player);
-                popup.remove();
+            SchedulerUtils.runTaskLaterAsynchronously(plugin, new SchedulerRunnable() {
+                @Override
+                public void run() {
+                    popup.revoke(player);
+                    popup.remove();
+                }
             }, 70);
 
             return;
@@ -280,7 +291,12 @@ public class GuiManager {
                 if (this.manager.shutdown) {
                     gui.onClose(this.manager, player);
                 } else {
-                    Bukkit.getScheduler().runTaskLater(this.manager.plugin, () -> gui.onClose(this.manager, player), 1);
+                    SchedulerUtils.runEntityTaskLater(manager.plugin, player, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            gui.onClose(manager, player);
+                        }
+                    }, 1);
                 }
 
                 this.manager.openInventories.remove(player);

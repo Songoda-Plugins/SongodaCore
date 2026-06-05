@@ -4,7 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 
 public enum ServerProject {
-    UNKNOWN, CRAFTBUKKIT, SPIGOT, PAPER, TACO, GLOWSTONE, MOCK_BUKKIT;
+    UNKNOWN, CRAFTBUKKIT, SPIGOT, PAPER, FOLIA, TACO, GLOWSTONE, MOCK_BUKKIT;
     private static final ServerProject serverProject = checkProject();
 
     private static ServerProject checkProject() {
@@ -36,6 +36,12 @@ public enum ServerProject {
             Class.forName("com.destroystokyo.paper.PaperConfig");
             return PAPER;
         } catch (ClassNotFoundException ignore) {
+        }
+
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return FOLIA;
+        } catch (ClassNotFoundException ignored) {
         }
 
         // spigot is the fork that pretty much all builds are based on anymore

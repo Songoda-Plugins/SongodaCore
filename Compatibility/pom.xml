@@ -28,6 +28,13 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Folia-Compatibility</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.viaversion</groupId>
             <artifactId>viaversion-api</artifactId>
             <version>4.7.0</version>

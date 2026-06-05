@@ -1,5 +1,8 @@
 package com.craftaro.core;
 
+import com.craftaro.core.compatibility.folia.SchedulerRunnable;
+import com.craftaro.core.compatibility.folia.SchedulerTask;
+import com.craftaro.core.compatibility.folia.SchedulerUtils;
 import com.craftaro.core.commands.CommandManager;
 import com.craftaro.core.compatibility.ClientVersion;
 import com.craftaro.core.core.LocaleModule;
@@ -23,7 +26,6 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -198,15 +200,26 @@ public class SongodaCore {
         Bukkit.getPluginManager().registerEvents(this.shadingListener, this.piggybackedPlugin);
 
         // we aggressively want to own this command
-        this.tasks.add(Bukkit.getScheduler().runTaskLaterAsynchronously(this.piggybackedPlugin, () ->
-                        CommandManager.registerCommandDynamically(this.piggybackedPlugin, "songoda", this.commandManager, this.commandManager),
-                10 * 60));
-        this.tasks.add(Bukkit.getScheduler().runTaskLaterAsynchronously(this.piggybackedPlugin, () ->
-                        CommandManager.registerCommandDynamically(this.piggybackedPlugin, "songoda", this.commandManager, this.commandManager),
-                20 * 60));
-        this.tasks.add(Bukkit.getScheduler().runTaskLaterAsynchronously(this.piggybackedPlugin, () ->
-                        CommandManager.registerCommandDynamically(this.piggybackedPlugin, "songoda", this.commandManager, this.commandManager),
-                20 * 60 * 2));
+        tasks.add(SchedulerUtils.runTaskLater(piggybackedPlugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                CommandManager.registerCommandDynamically(piggybackedPlugin, "songoda", commandManager, commandManager);
+            }
+        }, 10 * 60));
+
+        tasks.add(SchedulerUtils.runTaskLater(piggybackedPlugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                CommandManager.registerCommandDynamically(piggybackedPlugin, "songoda", commandManager, commandManager);
+            }
+        }, 20 * 60));
+
+        tasks.add(SchedulerUtils.runTaskLater(piggybackedPlugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                CommandManager.registerCommandDynamically(piggybackedPlugin, "songoda", commandManager, commandManager);
+            }
+        }, 20 * 60 * 2));
     }
 
     /**
@@ -215,8 +228,8 @@ public class SongodaCore {
     private void destroy() {
         Bukkit.getServicesManager().unregister(SongodaCore.class, INSTANCE);
 
-        this.tasks.stream().filter(Objects::nonNull)
-                .forEach(task -> Bukkit.getScheduler().cancelTask(task.getTaskId()));
+        tasks.stream().filter(Objects::nonNull)
+                .forEach(SchedulerUtils::cancelTask);
 
         HandlerList.unregisterAll(this.loginListener);
         if (!hasShading()) {
@@ -228,7 +241,7 @@ public class SongodaCore {
         this.loginListener = null;
     }
 
-    private ArrayList<BukkitTask> tasks = new ArrayList<>();
+    private final ArrayList<SchedulerTask> tasks = new ArrayList<>();
 
     private void register(JavaPlugin plugin, int pluginID, String icon, String libraryVersion) {
         ProductVerificationStatus verificationStatus = ProductVerificationStatus.VERIFIED;
@@ -246,7 +259,12 @@ public class SongodaCore {
         // don't forget to check for language pack updates ;)
         info.addModule(new LocaleModule());
         registeredPlugins.add(info);
-        this.tasks.add(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> update(info), 60L));
+        tasks.add(SchedulerUtils.runTaskLaterAsynchronously(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                update(info);
+            }
+        }, 60L));
     }
 
     /**
@@ -425,9 +443,14 @@ public class SongodaCore {
 
             // check for updates! ;)
             for (PluginInfo plugin : getPlugins()) {
-                if (plugin.getNotification() != null && plugin.getJavaPlugin().isEnabled())
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(plugin.getJavaPlugin(), () ->
-                            player.sendMessage("[" + plugin.getJavaPlugin().getName() + "] " + plugin.getNotification()), 10L);
+                if (plugin.getNotification() != null && plugin.getJavaPlugin().isEnabled()) {
+                    SchedulerUtils.runTaskLaterAsynchronously(plugin.getJavaPlugin(), new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            player.sendMessage("[" + plugin.getJavaPlugin().getName() + "] " + plugin.getNotification());
+                        }
+                    }, 10L);
+                }
             }
         }
 

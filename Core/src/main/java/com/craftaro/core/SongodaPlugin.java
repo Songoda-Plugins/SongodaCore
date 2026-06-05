@@ -1,5 +1,7 @@
 package com.craftaro.core;
 
+import com.craftaro.core.compatibility.folia.SchedulerRunnable;
+import com.craftaro.core.compatibility.folia.SchedulerUtils;
 import com.craftaro.core.configuration.Config;
 import com.craftaro.core.database.DataManager;
 import com.craftaro.core.database.DataMigration;
@@ -18,7 +20,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -131,6 +135,7 @@ public abstract class SongodaPlugin extends JavaPlugin {
             dependencies.add(new Dependency("https://repo1.maven.org/maven2", "com;github;cryptomorin", "XSeries", "9.8.0", false,
                     new Relocation("com;cryptomorin;xseries", "com;craftaro;third_party;com;cryptomorin;xseries")) // Custom relocation if the package names not match with the groupId
             );
+            dependencies.add(new Dependency("https://papermc.io/repo/repository/maven-public/", "io;papermc", "paperlib", "1.0.7"));
 
             //Load plugin dependencies
             new DependencyLoader(this).loadDependencies(dependencies);
@@ -165,10 +170,13 @@ public abstract class SongodaPlugin extends JavaPlugin {
             this.licensePreventedPluginLoad = true;
             SongodaCore.registerPlugin(this, CraftaroProductVerification.getProductId(), (XMaterial) null);
 
-            getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-                String pluginName = getDescription().getName();
-                String pluginUrl = "https://craftaro.com/marketplace/product/" + CraftaroProductVerification.getProductId();
-                Bukkit.broadcastMessage(ChatColor.RED + pluginName + " has not been activated. Please download " + pluginName + " here: " + pluginUrl);
+            SchedulerUtils.scheduleSyncRepeatingTask(this, new SchedulerRunnable() {
+                @Override
+                public void run() {
+                    String pluginName = getDescription().getName();
+                    String pluginUrl = "https://craftaro.com/marketplace/product/" + CraftaroProductVerification.getProductId();
+                    Bukkit.broadcastMessage(ChatColor.RED + pluginName + " has not been activated. Please download " + pluginName + " here: " + pluginUrl);
+                }
             }, 5 * 20, 60 * 20);
             return;
         }
@@ -189,7 +197,12 @@ public abstract class SongodaPlugin extends JavaPlugin {
             }
 
             // Load Data.
-            Bukkit.getScheduler().runTaskLater(this, this::onDataLoad, this.dataLoadDelay);
+            SchedulerUtils.runTaskLater(this, new SchedulerRunnable() {
+                @Override
+                public void run() {
+                    onDataLoad();
+                }
+            }, this.dataLoadDelay);
 
             if (this.emergencyStop) {
                 console.sendMessage(ChatColor.RED + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

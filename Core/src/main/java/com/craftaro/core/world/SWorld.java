@@ -2,12 +2,14 @@ package com.craftaro.core.world;
 
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.nms.Nms;
+import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public class SWorld {
     protected final com.craftaro.core.nms.world.SWorld sWorld;
@@ -33,6 +35,14 @@ public class SWorld {
         }
 
         return this.sWorld.getLivingEntities();
+    }
+
+    /**
+     * For folia servers
+     * @return EntityScheduler and a list of entities belongs to it
+     */
+    public Map<EntityScheduler, List<LivingEntity>> getRegionizedEntities() {
+        return sWorld.getRegionizedEntities();
     }
 
     public World getWorld() {

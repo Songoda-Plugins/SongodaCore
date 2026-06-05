@@ -1,5 +1,8 @@
 package com.craftaro.core.input;
 
+import com.craftaro.core.compatibility.folia.SchedulerRunnable;
+import com.craftaro.core.compatibility.folia.SchedulerTask;
+import com.craftaro.core.compatibility.folia.SchedulerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +23,7 @@ public class ChatPrompt implements Listener {
 
     private final Plugin plugin;
     private final ChatConfirmHandler handler;
-    private int taskId;
+    private SchedulerTask task;
     private OnClose onClose = null;
     private OnCancel onCancel = null;
     private Listener listener;
@@ -67,14 +70,21 @@ public class ChatPrompt implements Listener {
     }
 
     public ChatPrompt setTimeOut(Player player, long ticks) {
-        taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if (onClose != null) {
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () ->
-                        onClose.onClose(), 0L);
-            }
+        task = SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                if (onClose != null) {
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
+                }
 
-            HandlerList.unregisterAll(listener);
-            player.sendMessage("Your action has timed out.");
+                HandlerList.unregisterAll(listener);
+                player.sendMessage("Your action has timed out.");
+            }
         }, ticks);
 
         return this;
@@ -104,11 +114,16 @@ public class ChatPrompt implements Listener {
                 }
 
                 if (onClose != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> onClose.onClose(), 0L);
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
                 }
 
                 HandlerList.unregisterAll(listener);
-                Bukkit.getScheduler().cancelTask(taskId);
+                SchedulerUtils.cancelTask(task);
             }
 
             @EventHandler(priority = EventPriority.LOWEST)
@@ -126,13 +141,23 @@ public class ChatPrompt implements Listener {
                 }
 
                 if (onCancel != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> onCancel.onCancel(), 0L);
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onCancel.onCancel();
+                        }
+                    }, 0L);
                 } else if (onClose != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> onClose.onClose(), 0L);
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
                 }
 
                 HandlerList.unregisterAll(listener);
-                Bukkit.getScheduler().cancelTask(taskId);
+                SchedulerUtils.cancelTask(task);
             }
         };
 
