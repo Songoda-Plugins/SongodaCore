@@ -28,6 +28,12 @@ jobs:
 
       - name: Prepare Workspace
         uses: ./.github/actions/setup_project_workspace
+        with:
+          spigot_buildtools_sftp_host: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST }}
+          spigot_buildtools_sftp_port: ${{ vars.SPIGOT_BUILDTOOLS_SFTP_PORT }}
+          spigot_buildtools_sftp_user: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_USER }}
+          spigot_buildtools_sftp_private_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_PRIVATE_KEY }}
+          spigot_buildtools_sftp_host_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST_KEY }}
 
       - name: Build with Maven
         run: mvn -B -DskipTests clean package

@@ -8,16 +8,58 @@ inputs:
   maven_password:
     required: false
     description: The password to use for the Maven server
+  spigot_buildtools_sftp_host:
+    required: false
+    description: The SFTP host to use for caching the Spigot BuildTools
+  spigot_buildtools_sftp_port:
+    required: false
+    description: The SFTP port to use
+  spigot_buildtools_sftp_user:
+    required: false
+    description: The SFTP user to use
+  spigot_buildtools_sftp_private_key:
+    required: false
+    description: The SFTP private key to use
+  spigot_buildtools_sftp_host_key:
+    required: false
+    description: The SFTP host key to expect
 
 runs:
   using: composite
   steps:
-    - uses: craftaro/GH-Commons/.github/actions/setup_workspace@master
+    - uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@main
       with:
         maven_username: ${{ inputs.maven_username }}
         maven_password: ${{ inputs.maven_password }}
 
-    - uses: SpraxDev/Action-SpigotMC@v4
+    - uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: adopt
+        overwrite-settings: false
+
+    - uses: SpraxDev/Action-SpigotMC@v5
       with:
         versions: 1.18.1, 1.18.2, 1.19, 1.19.2, 1.19.3, 1.19.4, 1.20.1, 1.20.2, 1.20.4
         remapped: true
+        sftpCacheHost: ${{ inputs.spigot_buildtools_sftp_host }}
+        sftpCachePort: ${{ inputs.spigot_buildtools_sftp_port }}
+        sftpCacheUser: ${{ inputs.spigot_buildtools_sftp_user }}
+        sftpCachePrivateKey: ${{ inputs.spigot_buildtools_sftp_private_key }}
+        sftpCacheExpectedHostKey: ${{ inputs.spigot_buildtools_sftp_host_key }}
+
+    - uses: actions/setup-java@v4
+      with:
+        java-version: 21
+        distribution: adopt
+        overwrite-settings: false
+
+    - uses: SpraxDev/Action-SpigotMC@v5
+      with:
+        versions: 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5
+        remapped: true
+        sftpCacheHost: ${{ inputs.spigot_buildtools_sftp_host }}
+        sftpCachePort: ${{ inputs.spigot_buildtools_sftp_port }}
+        sftpCacheUser: ${{ inputs.spigot_buildtools_sftp_user }}
+        sftpCachePrivateKey: ${{ inputs.spigot_buildtools_sftp_private_key }}
+        sftpCacheExpectedHostKey: ${{ inputs.spigot_buildtools_sftp_host_key }}

@@ -13,7 +13,7 @@ permissions: read-all
 env:
   DEPLOYMENT_POM_PATH: ./Core/dependency-reduced-pom.xml
   DEPLOYMENT_ARTIFACT_DIR: ./Core/target
-  DEPLOYMENT_ARTIFACT_SELECTOR: CraftaroCore-*.jar
+  DEPLOYMENT_ARTIFACT_SELECTOR: SongodaCore-*.jar
 
 jobs:
   Tests:
@@ -38,9 +38,14 @@ jobs:
         with:
           maven_username: ${{ secrets.PLUGINS_MAVEN_REPO_USERNAME }}
           maven_password: ${{ secrets.PLUGINS_MAVEN_REPO_PASSWORD }}
+          spigot_buildtools_sftp_host: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST }}
+          spigot_buildtools_sftp_port: ${{ vars.SPIGOT_BUILDTOOLS_SFTP_PORT }}
+          spigot_buildtools_sftp_user: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_USER }}
+          spigot_buildtools_sftp_private_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_PRIVATE_KEY }}
+          spigot_buildtools_sftp_host_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST_KEY }}
 
       - name: Set project version
-        uses: craftaro/GH-Commons/.github/actions/maven_set_project_version@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_set_project_version@main
         with:
           append_snapshot: ${{ github.ref_type == 'tag' && 'false' || 'true' }}
           version: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
@@ -51,7 +56,7 @@ jobs:
         run: mvn -B -Duser.name="GitHub Actions on $GITHUB_REPOSITORY (id=$GITHUB_RUN_ID)" -DskipTests clean package
 
       - name: Sign jar archives
-        uses: craftaro/GH-Commons/.github/actions/sign_jars@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/sign_jars@main
         with:
           jar_file_selector: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
           keystore_gpg_encrypted: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_GPG }}
@@ -66,7 +71,7 @@ jobs:
 
       - name: Deploy to Maven repo
         if: ${{ github.event_name == 'push' }}
-        uses: craftaro/GH-Commons/.github/actions/maven_deploy@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@main
         with:
           repository_url: ${{ vars.PLUGINS_MAVEN_REPO_URL_RELEASE }}
           repository_url_snapshots: ${{ vars.PLUGINS_MAVEN_REPO_URL_SNAPSHOT }}
@@ -74,7 +79,7 @@ jobs:
           maven_out_dir: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}
       - name: Deploy parent pom.xml to Maven repo
         if: ${{ github.event_name == 'push' }}
-        uses: craftaro/GH-Commons/.github/actions/maven_deploy@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@main
         with:
           repository_url: ${{ vars.PLUGINS_MAVEN_REPO_URL_RELEASE }}
           repository_url_snapshots: ${{ vars.PLUGINS_MAVEN_REPO_URL_SNAPSHOT }}
@@ -91,7 +96,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Notify Webhook
-        uses: craftaro/GH-Commons/.github/actions/discord_send_job_results@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/discord_send_job_results@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           webhook_url: ${{ secrets.DISCORD_BUILD_STATUS_WEBHOOK }}

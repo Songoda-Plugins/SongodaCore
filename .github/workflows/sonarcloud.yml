@@ -9,8 +9,8 @@ permissions: read-all
 
 env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_ORGANIZATION: craftaro
-  SONAR_PROJECT_KEY: craftaro_CraftaroCore
+  SONAR_ORGANIZATION: songoda
+  SONAR_PROJECT_KEY: songoda_SongodaCore
 
 jobs:
   Analyze:
@@ -23,6 +23,12 @@ jobs:
 
       - name: Prepare Workspace
         uses: ./.github/actions/setup_project_workspace
+        with:
+          spigot_buildtools_sftp_host: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST }}
+          spigot_buildtools_sftp_port: ${{ vars.SPIGOT_BUILDTOOLS_SFTP_PORT }}
+          spigot_buildtools_sftp_user: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_USER }}
+          spigot_buildtools_sftp_private_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_PRIVATE_KEY }}
+          spigot_buildtools_sftp_host_key: ${{ secrets.SPIGOT_BUILDTOOLS_SFTP_HOST_KEY }}
 
       - name: 'Cache: SonarCloud'
         uses: actions/cache@v4

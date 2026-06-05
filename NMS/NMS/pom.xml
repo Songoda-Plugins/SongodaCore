@@ -5,18 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.craftaro</groupId>
-        <artifactId>CraftaroCore-Modules</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <groupId>com.songoda</groupId>
+        <artifactId>SongodaCore-Modules</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>CraftaroCore-NMS</artifactId>
+    <artifactId>SongodaCore-NMS</artifactId>
 
     <dependencies>
         <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-API</artifactId>
+            <artifactId>SongodaCore-NMS-API</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -24,145 +24,199 @@
         <!-- Need to include all NMS modules here -->
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_20_R3</artifactId>
+            <artifactId>SongodaCore-NMS-v26_1_R1</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_20_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_21_R7</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_20_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_21_R6</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_19_R3</artifactId>
+            <artifactId>SongodaCore-NMS-v1_21_R5</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_19_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_21_R4</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <version>${project.version}</version>
-            <artifactId>CraftaroCore-NMS-v1_19_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_21_R3</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_21_R2</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_21_R1</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_20_R4</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_20_R3</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_20_R2</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_20_R1</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_19_R3</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_19_R2</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <version>${project.version}</version>
+            <artifactId>SongodaCore-NMS-v1_19_R1</artifactId>
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_18_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_18_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_18_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_18_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_17_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_17_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_16_R3</artifactId>
+            <artifactId>SongodaCore-NMS-v1_16_R3</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_16_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_16_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_16_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_16_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_15_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_15_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_14_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_14_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_13_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_13_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_13_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_13_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_12_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_12_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_11_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_11_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_10_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_10_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_9_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_9_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_9_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_9_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_8_R3</artifactId>
+            <artifactId>SongodaCore-NMS-v1_8_R3</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_8_R2</artifactId>
+            <artifactId>SongodaCore-NMS-v1_8_R2</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>CraftaroCore-NMS-v1_8_R1</artifactId>
+            <artifactId>SongodaCore-NMS-v1_8_R1</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

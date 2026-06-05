@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.craftaro</groupId>
-    <artifactId>CraftaroCore-Modules</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <groupId>com.songoda</groupId>
+    <artifactId>SongodaCore-Modules</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- Run 'mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y.Z' to update version recursively -->
@@ -27,6 +27,15 @@
 
         <module>NMS/NMS</module>
         <module>NMS/NMS-API</module>
+        <module>NMS/NMS-v26_1_R1</module>
+        <module>NMS/NMS-v1_21_R7</module>
+        <module>NMS/NMS-v1_21_R6</module>
+        <module>NMS/NMS-v1_21_R5</module>
+        <module>NMS/NMS-v1_21_R4</module>
+        <module>NMS/NMS-v1_21_R3</module>
+        <module>NMS/NMS-v1_21_R2</module>
+        <module>NMS/NMS-v1_21_R1</module>
+        <module>NMS/NMS-v1_20_R4</module>
         <module>NMS/NMS-v1_20_R3</module>
         <module>NMS/NMS-v1_20_R2</module>
         <module>NMS/NMS-v1_20_R1</module>
@@ -55,13 +64,13 @@
     </modules>
 
     <issueManagement>
-        <url>https://github.com/craftaro/CraftaroCore/issues</url>
+        <url>https://github.com/Songoda-Plugins/SongodaCore/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/craftaro/CraftaroCore</url>
-        <connection>scm:git:git://github.com/craftaro/CraftaroCore.git</connection>
+        <url>https://github.com/Songoda-Plugins/SongodaCore</url>
+        <connection>scm:git:git://github.com/Songoda-Plugins/SongodaCore.git</connection>
     </scm>
 
     <build>
@@ -71,7 +80,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.15.0</version>
 
                 <configuration>
                     <source>${java.version}</source>
@@ -85,7 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.5</version>
 
                 <configuration>
                     <environmentVariables>
@@ -103,7 +112,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>0.8.12</version>
 
                 <executions>
                     <execution>
@@ -126,8 +135,8 @@
 
     <repositories>
         <repository>
-            <id>craftaro-minecraft-plugins</id>
-            <url>https://repo.craftaro.com/repository/minecraft-plugins/</url>
+            <id>songoda-minecraft-plugins</id>
+            <url>https://repo.songoda.com/repository/minecraft-plugins/</url>
         </repository>
 
         <repository>
@@ -147,7 +156,7 @@
 
         <repository>
             <id>PaperMC</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
         <repository>
@@ -161,10 +170,31 @@
         </repository>
 
         <repository>
+            <id>neetgames-repo</id>
+            <url>https://nexus.neetgames.com/repository/maven-releases/</url>
+        </repository>
+
+        <repository>
             <id>songoda-public</id>
-            <url>https://repo.craftaro.com/repository/public/</url>
+            <url>https://repo.songoda.com/repository/public/</url>
+        </repository>
+
+        <repository>
+            <id>songoda-third-party</id>
+            <url>https://repo.songoda.com/repository/third-party/</url>
         </repository>
     </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.cryptomorin</groupId>
+                <artifactId>XSeries</artifactId>
+                <version>13.7.0</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -177,26 +207,35 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.9</version>
+            <version>1.12.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.14.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.1</version>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>4.11.0</version>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- bytebuddy is used by mockito; We are declaring a newer version for Java 25 support -->
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.15.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
