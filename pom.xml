@@ -23,6 +23,7 @@
     <modules>
         <module>Core</module>
         <module>Compatibility</module>
+        <module>Folia-Compatibility</module>
 
         <module>NMS/NMS</module>
         <module>NMS/NMS-API</module>

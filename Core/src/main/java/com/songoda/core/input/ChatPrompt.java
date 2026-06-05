@@ -1,5 +1,8 @@
 package com.songoda.core.input;
 
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerTask;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +23,7 @@ public class ChatPrompt implements Listener {
 
     private final Plugin plugin;
     private final ChatConfirmHandler handler;
-    private int taskId;
+    private SchedulerTask task;
     private OnClose onClose = null;
     private OnCancel onCancel = null;
     private Listener listener;
@@ -67,14 +70,21 @@ public class ChatPrompt implements Listener {
     }
 
     public ChatPrompt setTimeOut(Player player, long ticks) {
-        this.taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-            if (this.onClose != null) {
-                this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, () ->
-                        this.onClose.onClose(), 0L);
-            }
+        task = SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+            @Override
+            public void run() {
+                if (onClose != null) {
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
+                }
 
-            HandlerList.unregisterAll(this.listener);
-            player.sendMessage("Your action has timed out.");
+                HandlerList.unregisterAll(listener);
+                player.sendMessage("Your action has timed out.");
+            }
         }, ticks);
 
         return this;
@@ -103,12 +113,17 @@ public class ChatPrompt implements Listener {
                     plugin.getLogger().log(Level.SEVERE, "Failed to process chat prompt", t);
                 }
 
-                if (ChatPrompt.this.onClose != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> ChatPrompt.this.onClose.onClose(), 0L);
+                if (onClose != null) {
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
                 }
 
-                HandlerList.unregisterAll(ChatPrompt.this.listener);
-                Bukkit.getScheduler().cancelTask(ChatPrompt.this.taskId);
+                HandlerList.unregisterAll(listener);
+                SchedulerUtils.cancelTask(task);
             }
 
             @EventHandler(priority = EventPriority.LOWEST)
@@ -125,14 +140,24 @@ public class ChatPrompt implements Listener {
                     event.setCancelled(true);
                 }
 
-                if (ChatPrompt.this.onCancel != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> ChatPrompt.this.onCancel.onCancel(), 0L);
-                } else if (ChatPrompt.this.onClose != null) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> ChatPrompt.this.onClose.onClose(), 0L);
+                if (onCancel != null) {
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onCancel.onCancel();
+                        }
+                    }, 0L);
+                } else if (onClose != null) {
+                    SchedulerUtils.scheduleSyncDelayedTask(plugin, new SchedulerRunnable() {
+                        @Override
+                        public void run() {
+                            onClose.onClose();
+                        }
+                    }, 0L);
                 }
 
-                HandlerList.unregisterAll(ChatPrompt.this.listener);
-                Bukkit.getScheduler().cancelTask(ChatPrompt.this.taskId);
+                HandlerList.unregisterAll(listener);
+                SchedulerUtils.cancelTask(task);
             }
         };
 

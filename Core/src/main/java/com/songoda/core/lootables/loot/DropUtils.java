@@ -1,5 +1,7 @@
 package com.songoda.core.lootables.loot;
 
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import com.songoda.core.SongodaCore;
 import com.songoda.ultimatestacker.api.UltimateStackerApi;
 import org.bukkit.Bukkit;
@@ -89,26 +91,34 @@ public class DropUtils {
                 }
                 stack.setAmount(newAmount.intValue());
             }
-            for (StackedItem stack : stacks) {
-                UltimateStackerApi.getStackedItemManager().createStack(stack.getItemToDrop(), event.getEntity().getLocation(), stack.getAmount(), event.getEntity());
-            }
+            SchedulerUtils.runLocationTask(SongodaCore.getHijackedPlugin(), event.getEntity().getLocation(), new SchedulerRunnable() {
+                @Override
+                public void run() {
+                    for (StackedItem stack : stacks) {
+                        UltimateStackerApi.getStackedItemManager().createStack(stack.getItemToDrop(), event.getEntity().getLocation(), stack.getAmount());
+                    }
+                }
+            });
             return;
         }
         event.getDrops().addAll(items);
     }
 
     private static void runCommands(LivingEntity entity, List<String> commands) {
-        Bukkit.getScheduler().runTask(SongodaCore.getHijackedPlugin(), () -> {
-            for (String command : commands) {
-                if (entity.getKiller() != null) {
-                    command = command.replace("%player%", entity.getKiller().getName()
-                            .replace("%x%", String.valueOf((int) entity.getLocation().getX()))
-                            .replace("%y%", String.valueOf((int) entity.getLocation().getY()))
-                            .replace("%z%", String.valueOf((int) entity.getLocation().getZ())));
-                }
+        SchedulerUtils.runTask(SongodaCore.getHijackedPlugin(), new SchedulerRunnable() {
+            @Override
+            public void run() {
+                for (String command : commands) {
+                    if (entity.getKiller() != null) {
+                        command = command.replace("%player%", entity.getKiller().getName()
+                                .replace("%x%", String.valueOf((int) entity.getLocation().getX()))
+                                .replace("%y%", String.valueOf((int) entity.getLocation().getY()))
+                                .replace("%z%", String.valueOf((int) entity.getLocation().getZ())));
+                    }
 
-                if (!command.contains("%player%")) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    if (!command.contains("%player%")) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    }
                 }
             }
         });
