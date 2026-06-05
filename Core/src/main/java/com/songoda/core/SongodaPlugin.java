@@ -1,30 +1,24 @@
 package com.songoda.core;
 
-import com.craftaro.core.compatibility.folia.SchedulerRunnable;
-import com.craftaro.core.compatibility.folia.SchedulerUtils;
-import com.craftaro.core.configuration.Config;
-import com.craftaro.core.database.DataManager;
-import com.craftaro.core.database.DataMigration;
-import com.craftaro.core.database.DatabaseType;
-import com.craftaro.core.dependency.Dependency;
-import com.craftaro.core.dependency.DependencyLoader;
-import com.craftaro.core.dependency.Relocation;
-import com.craftaro.core.hooks.HookRegistryManager;
-import com.craftaro.core.locale.Locale;
-import com.craftaro.core.utils.Metrics;
-import com.craftaro.core.verification.CraftaroProductVerification;
-import com.craftaro.core.verification.ProductVerificationStatus;
-import com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
+import com.songoda.core.configuration.Config;
+import com.songoda.core.database.DataManager;
+import com.songoda.core.database.DataMigration;
+import com.songoda.core.database.DatabaseType;
+import com.songoda.core.dependency.Dependency;
+import com.songoda.core.dependency.DependencyLoader;
+import com.songoda.core.dependency.Relocation;
+import com.songoda.core.hooks.HookRegistryManager;
+import com.songoda.core.locale.Locale;
+import com.songoda.core.utils.Metrics;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -124,7 +118,7 @@ public abstract class SongodaPlugin extends JavaPlugin {
             dependencies.add(new Dependency("https://repo.songoda.com/repository/third-party/", "com;cryptomorin", "XSeries", "13.7.0", false,
                     new Relocation("com;cryptomorin;xseries", "com;songoda;third_party;com;cryptomorin;xseries")) // Custom relocation if the package names not match with the groupId
             );
-            dependencies.add(new Dependency("https://papermc.io/repo/repository/maven-public/", "io;papermc", "paperlib", "1.0.7"));
+            dependencies.add(new Dependency("https://papermc.io/repo/repository/maven-public/", "io;papermc", "paperlib", "1.0.8"));
 
             //Load plugin dependencies
             new DependencyLoader(this).loadDependencies(dependencies);

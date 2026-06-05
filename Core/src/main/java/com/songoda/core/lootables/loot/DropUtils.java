@@ -1,9 +1,9 @@
 package com.songoda.core.lootables.loot;
 
-import com.craftaro.core.compatibility.folia.SchedulerRunnable;
-import com.craftaro.core.compatibility.folia.SchedulerUtils;
-import com.craftaro.core.SongodaCore;
-import com.craftaro.ultimatestacker.api.UltimateStackerApi;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
+import com.songoda.core.SongodaCore;
+import com.songoda.ultimatestacker.api.UltimateStackerApi;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;

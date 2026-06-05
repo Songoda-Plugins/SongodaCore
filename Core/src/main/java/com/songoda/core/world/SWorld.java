@@ -1,7 +1,7 @@
 package com.songoda.core.world;
 
-import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.nms.Nms;
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.nms.Nms;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
 import org.bukkit.Location;
 import org.bukkit.World;

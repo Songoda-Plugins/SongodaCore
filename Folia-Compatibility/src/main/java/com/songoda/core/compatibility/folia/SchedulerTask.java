@@ -1,4 +1,4 @@
-package com.craftaro.core.compatibility.folia;
+package com.songoda.core.compatibility.folia;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.scheduler.BukkitTask;

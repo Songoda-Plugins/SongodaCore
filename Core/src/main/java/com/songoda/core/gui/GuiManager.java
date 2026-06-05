@@ -3,6 +3,8 @@ package com.songoda.core.gui;
 import com.songoda.core.compatibility.ClientVersion;
 import com.songoda.core.compatibility.ServerVersion;
 import com.cryptomorin.xseries.XMaterial;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

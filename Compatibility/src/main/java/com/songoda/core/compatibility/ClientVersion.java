@@ -1,9 +1,8 @@
 package com.songoda.core.compatibility;
 
-import com.craftaro.core.compatibility.folia.SchedulerRunnable;
-import com.craftaro.core.compatibility.folia.SchedulerUtils;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import com.viaversion.viaversion.api.Via;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

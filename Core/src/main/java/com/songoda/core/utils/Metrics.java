@@ -1,7 +1,7 @@
 package com.songoda.core.utils;
 
-import com.craftaro.core.compatibility.folia.SchedulerRunnable;
-import com.craftaro.core.compatibility.folia.SchedulerUtils;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

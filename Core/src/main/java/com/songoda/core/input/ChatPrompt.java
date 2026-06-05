@@ -1,8 +1,8 @@
 package com.songoda.core.input;
 
-import com.craftaro.core.compatibility.folia.SchedulerRunnable;
-import com.craftaro.core.compatibility.folia.SchedulerTask;
-import com.craftaro.core.compatibility.folia.SchedulerUtils;
+import com.songoda.core.compatibility.folia.SchedulerRunnable;
+import com.songoda.core.compatibility.folia.SchedulerTask;
+import com.songoda.core.compatibility.folia.SchedulerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,4 +1,4 @@
-package com.craftaro.core.compatibility.folia;
+package com.songoda.core.compatibility.folia;
 
 public abstract class SchedulerRunnable implements Runnable {
 
