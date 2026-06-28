@@ -113,12 +113,36 @@ public class ClientVersion {
                 return ServerVersion.V1_19;
             case 763:
                 return ServerVersion.V1_20;
-
+            case 764:
+                return ServerVersion.V1_20_2;
+            case 765:
+                return ServerVersion.V1_20_3;
+            case 766:
+                return ServerVersion.V1_20_5;
+            case 767:
+                return ServerVersion.V1_21;
+            case 768:
+                return ServerVersion.V1_21_2;
+            case 769:
+                return ServerVersion.V1_21_4;
+            case 770:
+                return ServerVersion.V1_21_5;
+            case 771:
+                return ServerVersion.V1_21_6;
+            case 772:
+                return ServerVersion.V1_21_8;
+            case 773:
+                return ServerVersion.V1_21_9;
+            case 774:
+                return ServerVersion.V1_21_11;
+            case 775:
+                return ServerVersion.V26_1;
+            case 776:
+                return ServerVersion.V26_2;
             default:
-                return version > 763 ? ServerVersion.getServerVersion() : ServerVersion.UNKNOWN;
+                return version > 776 ? ServerVersion.getServerVersion() : ServerVersion.UNKNOWN;
         }
     }
-
     /**
      * Do Not Use: This is handled by SongodaCore.
      */

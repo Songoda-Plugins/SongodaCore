@@ -118,29 +118,26 @@ public class WorldCoreImpl implements WorldCore {
     public void updateAdjacentComparators(@NotNull Block bukkitBlock) {
         CraftBlock craftBlock = (CraftBlock) bukkitBlock;
         ServerLevel serverLevel = craftBlock.getCraftWorld().getHandle();
-
-        serverLevel.updateNeighbourForOutputSignal(craftBlock.getPosition(), craftBlock.getNMS().getBlock());
+        BlockPos pos = craftBlock.getPosition();
+        net.minecraft.world.level.block.state.BlockState nmsState = serverLevel.getBlockState(pos);
+        serverLevel.updateNeighbourForOutputSignal(pos, nmsState.getBlock());
     }
 
     @Override
     public void toggleLever(@NotNull Block bukkitBlock) {
         CraftBlock craftBlock = (CraftBlock) bukkitBlock;
-
         BlockState iBlockData = ((CraftBlockData) craftBlock.getBlockData()).getState();
-        BlockPos blockposition = craftBlock.getPosition();
+        BlockPos pos = craftBlock.getPosition();
         ServerLevel world = craftBlock.getCraftWorld().getHandle();
-
-        ((LeverBlock) craftBlock.getNMS().getBlock()).pull(iBlockData, world, blockposition, null);
+        ((LeverBlock) world.getBlockState(pos).getBlock()).pull(iBlockData, world, pos, null);
     }
 
     @Override
     public void pressButton(@NotNull Block bukkitBlock) {
         CraftBlock craftBlock = (CraftBlock) bukkitBlock;
-
         BlockState iBlockData = ((CraftBlockData) craftBlock.getBlockData()).getState();
-        BlockPos blockposition = craftBlock.getPosition();
+        BlockPos pos = craftBlock.getPosition();
         ServerLevel world = craftBlock.getCraftWorld().getHandle();
-
-        ((ButtonBlock) craftBlock.getNMS().getBlock()).press(iBlockData, world, blockposition, null);
+        ((ButtonBlock) world.getBlockState(pos).getBlock()).press(iBlockData, world, pos, null);
     }
 }
