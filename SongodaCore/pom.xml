@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.songoda</groupId>
+        <artifactId>SongodaCoreParent</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>SongodaCore</artifactId>
+    <packaging>jar</packaging>
+
+    <name>SongodaCore</name>
+    <description>Shared foundation for Songoda plugins, built on VortexCore.</description>
+
+    <dependencies>
+        <!-- VortexCore is embedded into the published SongodaCore runtime JAR. -->
+        <dependency>
+            <groupId>net.vortexdevelopment</groupId>
+            <artifactId>VortexCore</artifactId>
+            <version>${vortexcore.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Bukkit/Paper is supplied by the server and must not be shaded. -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Required when SongodaCore adds VInject entities or YAML batch DTOs. -->
+            <plugin>
+                <groupId>net.vortexdevelopment</groupId>
+                <artifactId>vinject-maven-plugin</artifactId>
+                <version>${vinject.version}</version>
+                <executions>
+                    <execution>
+                        <id>transform-classes</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>transform-classes</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>transform-test-classes</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>transform-classes</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                Publish a self-contained core runtime. VortexCore is hidden inside
+                SongodaCore so final plugins only need to relocate com.songoda.core.
+                VortexPlugin discovers its internally relocated package at runtime.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.vortexdevelopment</groupId>
+                        <artifactId>MavenYamlTransformer</artifactId>
+                        <version>${maven.yaml.transformer.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>shade-runtime</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                            <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
+                            <minimizeJar>false</minimizeJar>
+                            <relocations>
+                                <!--
+                                    Only relocate VortexCore itself. Runtime libs (Jackson, Gson,
+                                    DB drivers, Adventure) are loaded via plugin.yml libraries -
+                                    do not shade/relocate them or bytecode will miss the library loader packages.
+                                -->
+                                <relocation>
+                                    <pattern>net.vortexdevelopment.vortexcore</pattern>
+                                    <shadedPattern>com.songoda.core.vortexcore</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <transformers>
+                                <transformer implementation="net.vortexdevelopment.MavenYamlTransformer">
+                                    <paths>
+                                        <path>plugin.yml</path>
+                                    </paths>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/INDEX.LIST</exclude>
+                                        <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

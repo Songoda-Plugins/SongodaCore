@@ -1,0 +1,37 @@
+# Maven
+target/
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local Maven metadata and build output
+dependency-reduced-pom.xml
+pom.xml.releaseBackup
+release.properties
+
+# Local test-server/runtime data
+run/
+server/
+logs/
+db_test/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
