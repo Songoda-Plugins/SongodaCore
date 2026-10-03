@@ -1,5 +1,6 @@
 package com.songoda.core;
 
+import com.songoda.core.hooks.HookRegistry;
 import net.vortexdevelopment.vortexcore.VortexPlugin;
 import net.vortexdevelopment.vortexcore.compatibility.KnownServerVersions;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SongodaPlugin extends VortexPlugin {
 
+    private final HookRegistry hookRegistry = new HookRegistry();
+
     /**
      * Returns the active Songoda plugin instance.
      *
@@ -17,6 +20,15 @@ public abstract class SongodaPlugin extends VortexPlugin {
      */
     public static SongodaPlugin getInstance() {
         return (SongodaPlugin) VortexPlugin.getInstance();
+    }
+
+    /**
+     * Returns the registry used to run optional plugin integrations safely.
+     *
+     * @return the hook registry
+     */
+    public final HookRegistry getHookRegistry() {
+        return this.hookRegistry;
     }
 
     /**

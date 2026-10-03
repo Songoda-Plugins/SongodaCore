@@ -55,6 +55,33 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>enginehub</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
+            <id>neetgames</id>
+            <url>https://nexus.neetgames.com/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>auxilor</id>
+            <url>https://repo.auxilor.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>phoenix</id>
+            <url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>betonquest</id>
+            <url>https://repo.betonquest.org/betonquest/</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -90,6 +117,83 @@
                 <artifactId>annotations</artifactId>
                 <version>26.0.2</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sk89q.worldguard</groupId>
+                <artifactId>worldguard-bukkit</artifactId>
+                <version>7.0.17</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.GriefPrevention</groupId>
+                <artifactId>GriefPrevention</artifactId>
+                <version>16.18.2</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.gmail.nossr50.mcMMO</groupId>
+                <artifactId>mcMMO</artifactId>
+                <version>2.3.001-SNAPSHOT</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Zrips</groupId>
+                <artifactId>Jobs</artifactId>
+                <version>v5.2.6.2</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>dev.aurelium</groupId>
+                <artifactId>auraskills-api-bukkit</artifactId>
+                <version>2.3.5</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.willfp</groupId>
+                <artifactId>eco</artifactId>
+                <version>6.75.2</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.willfp</groupId>
+                <artifactId>EcoSkills</artifactId>
+                <version>3.67.0</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.willfp</groupId>
+                <artifactId>EcoJobs</artifactId>
+                <version>3.77.0</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>net.Indyuce</groupId>
+                <artifactId>MMOCore-API</artifactId>
+                <version>1.13.1-SNAPSHOT</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>io.lumine</groupId>
+                <artifactId>MythicLib-dist</artifactId>
+                <version>1.7.1-SNAPSHOT</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.betonquest</groupId>
+                <artifactId>betonquest</artifactId>
+                <version>3.0.2</version>
+                <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
