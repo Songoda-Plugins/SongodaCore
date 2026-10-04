@@ -21,9 +21,9 @@
     <properties>
         <java.version>17</java.version>
         <paper.api.version>1.21.11-R0.1-SNAPSHOT</paper.api.version>
-        <vortexcore.version>3.1.0-SNAPSHOT</vortexcore.version>
+        <vortexcore.version>3.1.1-SNAPSHOT</vortexcore.version>
         <ultimateclaims.api.version>4.0.0-SNAPSHOT</ultimateclaims.api.version>
-        <vinject.version>2.0.0-SNAPSHOT</vinject.version>
+        <vinject.version>2.0.0</vinject.version>
         <maven.yaml.transformer.version>1.0.4</maven.yaml.transformer.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
