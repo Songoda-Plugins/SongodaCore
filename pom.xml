@@ -44,6 +44,9 @@
         <repository>
             <id>songoda-public</id>
             <url>https://repo.songoda-reborn.com/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>vortex-public</id>
