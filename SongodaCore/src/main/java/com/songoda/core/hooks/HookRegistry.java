@@ -2,6 +2,7 @@ package com.songoda.core.hooks;
 
 import com.songoda.core.hooks.protection.GriefPreventionProtectionHook;
 import com.songoda.core.hooks.protection.ProtectionHook;
+import com.songoda.core.hooks.protection.UltimateClaimsProtectionHook;
 import com.songoda.core.hooks.protection.WorldGuardProtectionHook;
 
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ public final class HookRegistry {
     public HookRegistry() {
         registerProtectionPlugin("WorldGuard");
         registerProtectionPlugin("GriefPrevention");
+        registerProtectionPlugin("UltimateClaims");
     }
 
     private void registerProtectionPlugin(String pluginName) {
@@ -113,6 +115,7 @@ public final class HookRegistry {
                         : switch (this.pluginName) {
                             case "WorldGuard" -> new WorldGuardProtectionHook();
                             case "GriefPrevention" -> new GriefPreventionProtectionHook();
+                            case "UltimateClaims" -> new UltimateClaimsProtectionHook();
                             default -> throw new IllegalStateException("No protection hook registered for " + this.pluginName);
                         };
             }

@@ -53,6 +53,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.songoda</groupId>
+            <artifactId>UltimateClaims-API</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
             <scope>provided</scope>
