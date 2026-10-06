@@ -9,15 +9,15 @@
   <a href="Licensing-API/README.md">Licensing-API documentation</a>
 </p>
 
-SongodaCore provides the Songoda-facing `SongodaPlugin` base class and a shared runtime built on
-[VortexCore](https://github.com/vortexdevelopment-net/VortexCore). The repository also contains the standalone
+SongodaCore provides the `SongodaPlugin` base class and owns its shared runtime directly under `com.songoda.core`,
+with [VInject](https://github.com/vortexdevelopment-net/VInject) providing dependency injection. The repository also contains the standalone
 `Licensing-API` client for plugins that need Songoda licensing.
 
 ## Modules
 
 | Module | Description |
 | --- | --- |
-| [`SongodaCore`](SongodaCore/README.md) | VortexCore-based runtime and `SongodaPlugin` base class. |
+| [`SongodaCore`](SongodaCore/README.md) | Shared runtime, direct VInject integration, and `SongodaPlugin` base class. |
 | [`Licensing-API`](Licensing-API/README.md) | Standalone Bukkit/Paper license client that can be shaded into a plugin. |
 
 Read the [SongodaCore documentation](SongodaCore/README.md) for requirements, build instructions, consumption, shading,

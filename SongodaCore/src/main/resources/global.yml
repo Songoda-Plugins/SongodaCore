@@ -1,0 +1,8 @@
+# Tag resolver configuration
+Tag Resolvers:
+  Language Resolver: true # Allows for <language:path.to.key> to be used in messages to get the value from the language file.
+  Player Command Resolver: true # Allows for <playercommand:command> to be used in messages to execute a command as the player when the message is sent to a player.
+  Console Command Resolver: false # Allows for <consolecommand:command> to be used in messages to execute a command as the console when the message is sent to a player.
+
+Settings:
+  Max Blocks Per Tick: 100

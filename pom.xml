@@ -21,9 +21,10 @@
     <properties>
         <java.version>17</java.version>
         <paper.api.version>1.21.11-R0.1-SNAPSHOT</paper.api.version>
-        <vortexcore.version>3.1.1-SNAPSHOT</vortexcore.version>
         <ultimateclaims.api.version>4.0.0-SNAPSHOT</ultimateclaims.api.version>
-        <vinject.version>2.0.0</vinject.version>
+        <luckperms.api.version>5.5</luckperms.api.version>
+        <adventure.version>4.26.1</adventure.version>
+        <vinject.version>2.0.1-SNAPSHOT</vinject.version>
         <maven.yaml.transformer.version>1.0.4</maven.yaml.transformer.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -86,6 +87,35 @@
             <id>betonquest</id>
             <url>https://repo.betonquest.org/betonquest/</url>
         </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>essentials-releases</id>
+            <url>https://repo.essentialsx.net/releases/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
+        </repository>
+        <repository>
+            <id>nexo</id>
+            <url>https://repo.nexomc.com/releases</url>
+        </repository>
+        <repository>
+            <id>oraxen</id>
+            <url>https://repo.oraxen.com/releases</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -110,6 +140,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.kyori</groupId>
+                <artifactId>adventure-bom</artifactId>
+                <version>${adventure.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>io.papermc.paper</groupId>
                 <artifactId>paper-api</artifactId>
@@ -140,6 +177,13 @@
                 <groupId>com.songoda</groupId>
                 <artifactId>UltimateClaims-API</artifactId>
                 <version>${ultimateclaims.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>net.luckperms</groupId>
+                <artifactId>api</artifactId>
+                <version>${luckperms.api.version}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
@@ -218,6 +262,13 @@
                     <version>3.13.0</version>
                     <configuration>
                         <release>${java.version}</release>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>1.18.42</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -231,4 +282,5 @@
             </plugins>
         </pluginManagement>
     </build>
+
 </project>

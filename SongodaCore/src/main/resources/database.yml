@@ -1,0 +1,24 @@
+Connection Settings:
+  # Supported: MARIADB, MYSQL, H2
+  # Default: H2
+  # Recommended: MARIADB
+  Type: H2
+  # Hostname for remote databases
+  Hostname: localhost
+  # Port for remote databases
+  Port: 3306
+  # Username for remote databases
+  Username: sa # H2 default username
+  # Password for remote databases
+  Password: "" # H2 default password empty
+  # Database name for remote databases
+  Database: database
+  # Maximum number of connections to the database
+  Pool Size: 5
+  # Use SSL for remote databases
+  Use SSL: false
+  # H2 only. Disables AUTO_SERVER when set to true.
+  # Leave false in almost all cases. Only use true in rare containerized setups
+  # where H2 server mode causes unknown host errors. When true, PlugMan reloads
+  # will break database access for H2.
+  Disable H2 Server Mode: false

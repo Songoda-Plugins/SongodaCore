@@ -76,7 +76,7 @@ public final class SongodaLicense {
      */
     public static Result verify(Plugin plugin) {
         Objects.requireNonNull(plugin, "plugin");
-        return verify(plugin, plugin.getPluginMeta().getName());
+        return verify(plugin, plugin.getDescription().getName());
     }
 
     /**
@@ -84,7 +84,7 @@ public final class SongodaLicense {
      */
     public static Result verify(Plugin plugin, String productId) {
         Objects.requireNonNull(plugin, "plugin");
-        return check(plugin.getDataFolder(), productId, plugin.getPluginMeta().getVersion());
+        return check(plugin.getDataFolder(), productId, plugin.getDescription().getVersion());
     }
 
     /**
@@ -92,7 +92,7 @@ public final class SongodaLicense {
      */
     public static CompletableFuture<Result> verifyAsync(Plugin plugin) {
         Objects.requireNonNull(plugin, "plugin");
-        return verifyAsync(plugin, plugin.getPluginMeta().getName());
+        return verifyAsync(plugin, plugin.getDescription().getName());
     }
 
     /**
@@ -101,7 +101,7 @@ public final class SongodaLicense {
     public static CompletableFuture<Result> verifyAsync(Plugin plugin, String productId) {
         Objects.requireNonNull(plugin, "plugin");
         File folder = plugin.getDataFolder();
-        String version = plugin.getPluginMeta().getVersion();
+        String version = plugin.getDescription().getVersion();
         return CompletableFuture.supplyAsync(() -> check(folder, productId, version));
     }
 
@@ -112,7 +112,7 @@ public final class SongodaLicense {
         Objects.requireNonNull(plugin, "plugin");
         Objects.requireNonNull(executor, "executor");
         File folder = plugin.getDataFolder();
-        String version = plugin.getPluginMeta().getVersion();
+        String version = plugin.getDescription().getVersion();
         return CompletableFuture.supplyAsync(() -> check(folder, productId, version), executor);
     }
 

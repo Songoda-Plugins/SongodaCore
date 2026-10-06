@@ -1,6 +1,6 @@
 # Songoda Licensing-API
 
-A single-source, shadeable Java 17+ license client for Bukkit/Paper plugins, independent of SongodaCore and VortexCore.
+A single-source, shadeable Java 17+ license client for Bukkit/Paper plugins, independent of SongodaCore.
 Consumers control startup, retries between checks, and player limits. The module includes no listeners or lifecycle hooks.
 
 ## Maven

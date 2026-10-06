@@ -1,0 +1,10 @@
+package ${PACKAGE_NAME};
+
+import org.bukkit.event.Listener;
+import com.songoda.core.vinject.annotation.RegisterListener;
+
+@RegisterListener
+public class ${NAME} implements
+
+Listener {
+}

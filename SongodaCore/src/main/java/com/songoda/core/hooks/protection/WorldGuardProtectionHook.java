@@ -18,6 +18,7 @@ public final class WorldGuardProtectionHook implements ProtectionHook {
         return WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
                 BukkitAdapter.adapt(location),
                 WorldGuardPlugin.inst().wrapPlayer(player),
+                Flags.BUILD,
                 Flags.BLOCK_BREAK
         );
     }
@@ -27,6 +28,7 @@ public final class WorldGuardProtectionHook implements ProtectionHook {
         return WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
                 BukkitAdapter.adapt(location),
                 WorldGuardPlugin.inst().wrapPlayer(player),
+                Flags.BUILD,
                 Flags.INTERACT
         );
     }

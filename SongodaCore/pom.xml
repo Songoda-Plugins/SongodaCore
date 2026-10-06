@@ -15,15 +15,43 @@
     <packaging>jar</packaging>
 
     <name>SongodaCore</name>
-    <description>Shared foundation for Songoda plugins, built on VortexCore.</description>
+    <description>Shared foundation for Songoda plugins, with a direct VInject runtime.</description>
+
+    <properties>
+        <dep.hikari.version>5.1.0</dep.hikari.version>
+        <dep.h2.version>2.2.224</dep.h2.version>
+        <dep.mysql.version>8.0.33</dep.mysql.version>
+        <dep.mariadb.version>3.4.1</dep.mariadb.version>
+        <dep.gson.version>2.11.0</dep.gson.version>
+        <dep.jackson.databind.version>2.22.2</dep.jackson.databind.version>
+        <dep.adventure.platform.bukkit.version>4.4.1</dep.adventure.platform.bukkit.version>
+    </properties>
 
     <dependencies>
-        <!-- VortexCore is embedded into the published SongodaCore runtime JAR. -->
+        <!-- VInject is embedded into the published SongodaCore runtime JAR. -->
         <dependency>
             <groupId>net.vortexdevelopment</groupId>
-            <artifactId>VortexCore</artifactId>
-            <version>${vortexcore.version}</version>
+            <artifactId>VInject-Core</artifactId>
+            <version>${vinject.version}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mariadb.jdbc</groupId>
+                    <artifactId>mariadb-java-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.mysql</groupId>
+                    <artifactId>mysql-connector-j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Bukkit/Paper is supplied by the server and must not be shaded. -->
@@ -36,6 +64,12 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.folia</groupId>
+            <artifactId>folia-api</artifactId>
+            <version>26.1.2.build.8-stable</version>
             <scope>provided</scope>
         </dependency>
 
@@ -55,6 +89,12 @@
         <dependency>
             <groupId>com.songoda</groupId>
             <artifactId>UltimateClaims-API</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -118,6 +158,157 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-gson</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-plain</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${dep.hikari.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${dep.h2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${dep.mysql.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${dep.mariadb.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${dep.jackson.databind.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>5.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+            <version>4.1.115.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.42</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.essentialsx</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.19.0</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bstats-bukkit</artifactId>
+                    <groupId>org.bstats</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.brcdev-minecraft</groupId>
+            <artifactId>shopgui-api</artifactId>
+            <version>3.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>beer.devs</groupId>
+            <artifactId>itemsadder-api</artifactId>
+            <version>4.0.17</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.Indyuce</groupId>
+            <artifactId>MMOItems-API</artifactId>
+            <version>6.9.5-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nexomc</groupId>
+            <artifactId>nexo</artifactId>
+            <version>1.28.0</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.th0rgal</groupId>
+            <artifactId>oraxen</artifactId>
+            <version>1.219.1</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,6 +320,7 @@
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>plugin.yml</exclude>
+                    <exclude>META-INF/songodacore-paper-loader-libs.properties</exclude>
                 </excludes>
             </resource>
             <resource>
@@ -136,12 +328,19 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>plugin.yml</include>
+                    <include>META-INF/songodacore-paper-loader-libs.properties</include>
                 </includes>
             </resource>
         </resources>
 
         <plugins>
-            <!-- Required when SongodaCore adds VInject entities or YAML batch DTOs. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+
+            <!-- Transform VInject entities and YAML batch metadata in the core runtime. -->
             <plugin>
                 <groupId>net.vortexdevelopment</groupId>
                 <artifactId>vinject-maven-plugin</artifactId>
@@ -164,11 +363,7 @@
                 </executions>
             </plugin>
 
-            <!--
-                Publish a self-contained core runtime. VortexCore is hidden inside
-                SongodaCore so final plugins only need to relocate com.songoda.core.
-                VortexPlugin discovers its internally relocated package at runtime.
-            -->
+            <!-- Publish the core classes and VInject as a self-contained runtime. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -193,14 +388,9 @@
                             <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
                             <minimizeJar>false</minimizeJar>
                             <relocations>
-                                <!--
-                                    Only relocate VortexCore itself. Runtime libs (Jackson, Gson,
-                                    DB drivers, Adventure) are loaded via plugin.yml libraries -
-                                    do not shade/relocate them or bytecode will miss the library loader packages.
-                                -->
                                 <relocation>
-                                    <pattern>net.vortexdevelopment.vortexcore</pattern>
-                                    <shadedPattern>com.songoda.core.vortexcore</shadedPattern>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>com.songoda.core.libs.bstats</shadedPattern>
                                 </relocation>
                             </relocations>
                             <transformers>
@@ -219,6 +409,16 @@
                                         <exclude>META-INF/*.RSA</exclude>
                                         <exclude>META-INF/INDEX.LIST</exclude>
                                         <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>net.vortexdevelopment:VInject-Core</artifact>
+                                    <excludes>
+                                        <exclude>com/zaxxer/**</exclude>
+                                        <exclude>com/mysql/**</exclude>
+                                        <exclude>org/mariadb/**</exclude>
+                                        <exclude>org/h2/**</exclude>
+                                        <exclude>**/examples/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

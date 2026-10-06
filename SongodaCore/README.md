@@ -2,8 +2,8 @@
 
 The modern shared foundation for Songoda plugins.
 
-SongodaCore provides the Songoda-facing `SongodaPlugin` base class while using
-[VortexCore](https://github.com/vortexdevelopment-net/VortexCore) internally for:
+SongodaCore provides the `SongodaPlugin` base class and implements its shared runtime directly under
+`com.songoda.core`. It depends directly on [VInject](https://github.com/vortexdevelopment-net/VInject) for dependency injection and includes:
 
 - VInject dependency injection;
 - annotated commands and tab completion;
@@ -27,12 +27,12 @@ licenses, start license tasks, enforce trial limits, or wrap the consuming plugi
 mvn clean verify
 ```
 
-The project publishes `com.songoda:SongodaCore` as a self-contained runtime JAR. VortexCore is relocated internally to
-`com.songoda.core.vortexcore` while building SongodaCore. Every final Songoda plugin only needs to relocate
+The project publishes `com.songoda:SongodaCore` as a self-contained runtime JAR containing the core classes and VInject.
+Every final Songoda plugin only needs to relocate
 `com.songoda.core` to `com.songoda.<plugin-name>.core`.
 
-This split is intentional: SongodaCore cannot know the package of the plugin that will consume it, while VortexCore
-uses the native Paper API directly. The remaining platform services are located dynamically after relocation. For a plugin whose main package is
+SongodaCore cannot know the package of the plugin that will consume it. Its runtime uses the native Paper API directly,
+and platform services are located dynamically after relocation. For a plugin whose main package is
 `com.songoda.epicfarming`, the relocation target must be
 `com.songoda.epicfarming.core`.
 
@@ -82,7 +82,7 @@ For example, a plugin whose main package is
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <!-- Keep VortexCore's reflectively loaded platform services in the final plugin JAR. -->
+                    <!-- Keep SongodaCore's reflectively loaded platform services in the final plugin JAR. -->
                     <minimizeJar>false</minimizeJar>
                     <relocations>
                         <relocation>
@@ -151,13 +151,10 @@ The important part is the consumer-specific SongodaCore relocation:
 </relocation>
 ```
 
-Use the VortexCore Maven YAML transformer in the final plugin so the embedded VortexCore descriptor fragment is merged
+Use the Maven YAML transformer in the final plugin so the embedded SongodaCore descriptor fragment is merged
 into the plugin's own `plugin.yml`. Do not leave SongodaCore in one shared package such as `com.songoda.core`, or the
-shared package can cause collisions between multiple Songoda plugins. VortexCore's
-`getVortexCorePackage()` resolves its internal relocation automatically.
-
-The existing `FabledSkyBlock` build follows this same convention with
-`com.songoda.skyblock.core`.
+shared package can cause collisions between multiple Songoda plugins. `SongodaPlugin.getSongodaCorePackage()`
+resolves the relocated runtime package automatically.
 
 ## Plugin skeleton
 
@@ -191,7 +188,7 @@ because VInject uses it as the scan anchor.
 
 ## Commands and components
 
-Songoda plugins may use VInject and VortexCore annotations directly:
+Songoda plugins use VInject annotations and SongodaCore's command and registration annotations:
 
 ```java
 
@@ -208,7 +205,7 @@ public final class ExampleCommand {
 }
 ```
 
-Keep public Songoda contracts in separate API modules when a plugin has an API surface. Keep VortexCore, Bukkit,
+Keep public Songoda contracts in separate API modules when a plugin has an API surface. Keep SongodaCore, Bukkit,
 commands, listeners, configuration, and GUI implementations in plugin modules.
 
 ## Project layout
@@ -220,6 +217,6 @@ SongodaCore/
 ├── .gitignore
 └── src/
     └── main/
-        ├── java/com/songoda/core/SongodaPlugin.java
-        └── resources/plugin.yml
+        ├── java/com/songoda/core/ (bootstrap, commands, compatibility, GUI, hooks, text, and VInject integration)
+        └── resources/ (descriptor, database defaults, language defaults, and VInject templates)
 ```

@@ -1,0 +1,5 @@
+General:
+  No Permission: "<prefix> <red>You do not have permission to use this command."
+  Player Only Command: "<prefix> <red>This command can only be used by players."
+  Console Only Command: "<prefix> <red>This command can only be used from the console."
+  Invalid Command Sender: "<prefix> <red>You cannot execute this command."
