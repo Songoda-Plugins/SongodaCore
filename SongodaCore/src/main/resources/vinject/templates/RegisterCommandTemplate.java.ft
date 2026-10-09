@@ -1,6 +1,9 @@
 package ${PACKAGE_NAME};
 
+import com.songoda.core.utils.SongodaCommandExecutor;
 import com.songoda.core.vinject.annotation.RegisterCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
