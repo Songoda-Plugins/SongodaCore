@@ -6,7 +6,6 @@ import net.vortexdevelopment.vinject.di.DependencyRepository;
 import com.songoda.core.SongodaPlugin;
 import com.songoda.core.hooks.types.ShopHook;
 import com.songoda.core.hooks.types.StackerHook;
-import com.songoda.core.item.resolver.ItemResolverManager;
 import com.songoda.core.vinject.annotation.RegisterListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

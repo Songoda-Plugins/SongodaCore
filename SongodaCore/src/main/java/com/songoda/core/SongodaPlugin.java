@@ -2,8 +2,6 @@ package com.songoda.core;
 
 import com.songoda.core.hooks.HookRegistry;
 import lombok.Getter;
-import net.vortexdevelopment.vinject.annotation.Bean;
-import net.vortexdevelopment.vinject.annotation.component.Component;
 import net.vortexdevelopment.vinject.annotation.component.Root;
 import net.vortexdevelopment.vinject.annotation.util.Injectable;
 import net.vortexdevelopment.vinject.database.Database;
@@ -33,7 +31,6 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

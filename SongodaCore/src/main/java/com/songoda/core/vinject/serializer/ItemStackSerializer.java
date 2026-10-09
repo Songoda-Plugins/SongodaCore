@@ -3,7 +3,6 @@ package com.songoda.core.vinject.serializer;
 import com.songoda.core.compatibility.EnchantmentResolver;
 import com.songoda.core.compatibility.KnownServerVersions;
 import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.hooks.plugin.HookManager;
 import com.songoda.core.item.resolver.ItemResolverManager;
 import com.songoda.core.spi.SkullProfiles;
 import com.songoda.core.text.AdventureUtils;

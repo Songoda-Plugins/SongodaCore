@@ -7,7 +7,6 @@ import com.songoda.core.SongodaPlugin;
 import com.songoda.core.compatibility.folia.SchedulerUtils;
 import com.songoda.core.item.resolver.ItemResolverManager;
 import com.songoda.core.text.AdventureUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

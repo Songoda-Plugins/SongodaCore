@@ -1,6 +1,5 @@
 package com.songoda.core.vinject.serializer;
 
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.junit.Test;
