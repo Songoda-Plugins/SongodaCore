@@ -24,7 +24,7 @@
         <ultimateclaims.api.version>4.0.0-SNAPSHOT</ultimateclaims.api.version>
         <luckperms.api.version>5.5</luckperms.api.version>
         <adventure.version>4.26.1</adventure.version>
-        <vinject.version>2.0.1-SNAPSHOT</vinject.version>
+        <vinject.version>2.0.0</vinject.version>
         <maven.yaml.transformer.version>1.0.4</maven.yaml.transformer.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
