@@ -1,7 +1,11 @@
 package com.songoda.core.hooks;
 
+import com.songoda.core.hooks.protection.BentoBoxProtectionHook;
 import com.songoda.core.hooks.protection.GriefPreventionProtectionHook;
+import com.songoda.core.hooks.protection.LandsProtectionHook;
 import com.songoda.core.hooks.protection.ProtectionHook;
+import com.songoda.core.hooks.protection.RedProtectProtectionHook;
+import com.songoda.core.hooks.protection.ResidenceProtectionHook;
 import com.songoda.core.hooks.protection.UltimateClaimsProtectionHook;
 import com.songoda.core.hooks.protection.WorldGuardProtectionHook;
 
@@ -29,6 +33,10 @@ public final class HookRegistry {
     private final Map<String, RegisteredProtectionHook> protectionHooks = new ConcurrentHashMap<>();
 
     public HookRegistry() {
+        registerProtectionPlugin("BentoBox");
+        registerProtectionPlugin("Lands");
+        registerProtectionPlugin("RedProtect");
+        registerProtectionPlugin("Residence");
         registerProtectionPlugin("WorldGuard");
         registerProtectionPlugin("GriefPrevention");
         registerProtectionPlugin("UltimateClaims");
@@ -113,6 +121,10 @@ public final class HookRegistry {
                 this.hook = this.hookFactory != null
                         ? this.hookFactory.get()
                         : switch (this.pluginName) {
+                            case "BentoBox" -> new BentoBoxProtectionHook();
+                            case "Lands" -> new LandsProtectionHook();
+                            case "RedProtect" -> new RedProtectProtectionHook();
+                            case "Residence" -> new ResidenceProtectionHook();
                             case "WorldGuard" -> new WorldGuardProtectionHook();
                             case "GriefPrevention" -> new GriefPreventionProtectionHook();
                             case "UltimateClaims" -> new UltimateClaimsProtectionHook();

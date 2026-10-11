@@ -22,6 +22,10 @@
         <java.version>17</java.version>
         <paper.api.version>1.21.11-R0.1-SNAPSHOT</paper.api.version>
         <ultimateclaims.api.version>4.0.0-SNAPSHOT</ultimateclaims.api.version>
+        <bentobox.api.version>3.22.3</bentobox.api.version>
+        <lands.api.version>7.25.4</lands.api.version>
+        <redprotect.api.version>8.1.2</redprotect.api.version>
+        <residence.api.version>6.0.2.3</residence.api.version>
         <luckperms.api.version>5.5</luckperms.api.version>
         <adventure.version>4.26.1</adventure.version>
         <vinject.version>2.0.0</vinject.version>
@@ -95,6 +99,10 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>bentoboxworld</id>
+            <url>https://repo.codemc.io/repository/bentoboxworld/</url>
         </repository>
         <repository>
             <id>essentials-releases</id>
@@ -177,6 +185,41 @@
                 <groupId>com.songoda</groupId>
                 <artifactId>UltimateClaims-API</artifactId>
                 <version>${ultimateclaims.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>world.bentobox</groupId>
+                <artifactId>bentobox</artifactId>
+                <version>${bentobox.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.angeschossen</groupId>
+                <artifactId>LandsAPI</artifactId>
+                <version>${lands.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>io.github.fabiozumbi12.RedProtect</groupId>
+                <artifactId>RedProtect-Core</artifactId>
+                <version>${redprotect.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>io.github.fabiozumbi12.RedProtect</groupId>
+                <artifactId>RedProtect-Spigot</artifactId>
+                <version>${redprotect.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Zrips</groupId>
+                <artifactId>Residence</artifactId>
+                <version>${residence.api.version}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
             </dependency>

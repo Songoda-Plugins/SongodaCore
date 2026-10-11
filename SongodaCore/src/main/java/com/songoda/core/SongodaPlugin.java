@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -572,21 +573,51 @@ public abstract class SongodaPlugin extends JavaPlugin {
             String databaseType = databaseConfig.getString(DATABASE_CONFIG_PATH + "Type").toLowerCase(Locale.ENGLISH);
             boolean disableH2ServerMode = databaseConfig.getBoolean(DATABASE_DISABLE_H2_SERVER_MODE_KEY, false);
             warnIfH2ServerModeDisabled(databaseType, disableH2ServerMode);
-            this.database.init(
-                    databaseConfig.getString(DATABASE_CONFIG_PATH + "Hostname"),
-                    databaseConfig.getString(DATABASE_CONFIG_PATH + "Port"),
-                    databaseConfig.getString(DATABASE_CONFIG_PATH + "Database"),
-                    databaseType,
-                    databaseConfig.getString(DATABASE_CONFIG_PATH + "Username"),
-                    databaseConfig.getString(DATABASE_CONFIG_PATH + "Password"),
-                    databaseConfig.getInt(DATABASE_CONFIG_PATH + "Pool Size"),
-                    new File(getDataFolder(), getName().toLowerCase()),
-                    !disableH2ServerMode);
+            try {
+                initializeDatabase(databaseConfig, !disableH2ServerMode);
+            } catch (Exception exception) {
+                if (!"h2".equalsIgnoreCase(databaseType) || disableH2ServerMode
+                        || !hasUnknownHostCause(exception)) {
+                    throw exception;
+                }
 
-            this.database.connect(); // Setups Hikari pool
+                getLogger().warning("H2 AUTO_SERVER could not resolve this server's hostname. Retrying without H2 server mode.");
+                try {
+                    initializeDatabase(databaseConfig, false);
+                    getLogger().warning("H2 connected with server mode disabled. Set Connection Settings.Disable H2 Server Mode: true in database.yml to keep this setting after restart.");
+                    getLogger().warning("H2 server mode disabled this way can prevent PlugMan reloads from reconnecting.");
+                } catch (Exception retryException) {
+                    retryException.addSuppressed(exception);
+                    getLogger().severe("H2 could not connect after retrying without server mode. Set Connection Settings.Disable H2 Server Mode: true in database.yml and check the database configuration.");
+                    handleDatabaseError(retryException, false);
+                }
+            }
         } catch (Exception e) {
             handleDatabaseError(e);
         }
+    }
+
+    private void initializeDatabase(YamlConfiguration databaseConfig, boolean h2ServerModeEnabled) {
+        this.database.init(
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Hostname"),
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Port"),
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Database"),
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Type").toLowerCase(Locale.ENGLISH),
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Username"),
+                databaseConfig.getString(DATABASE_CONFIG_PATH + "Password"),
+                databaseConfig.getInt(DATABASE_CONFIG_PATH + "Pool Size"),
+                new File(getDataFolder(), getName().toLowerCase()),
+                h2ServerModeEnabled);
+        this.database.connect(); // Setups Hikari pool
+    }
+
+    private boolean hasUnknownHostCause(Throwable exception) {
+        for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
+            if (cause instanceof UnknownHostException) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void runDatabaseMigrations() {
@@ -608,9 +639,15 @@ public abstract class SongodaPlugin extends JavaPlugin {
     }
 
     private void handleDatabaseError(Exception e) {
+        handleDatabaseError(e, true);
+    }
+
+    private void handleDatabaseError(Exception e, boolean printStackTrace) {
         this.emergencyStop = true;
         AdventureUtils.sendMessage("§cCould not connect to the database: " + e.getMessage(), Bukkit.getConsoleSender());
-        e.printStackTrace();
+        if (printStackTrace) {
+            e.printStackTrace();
+        }
         AdventureUtils.sendMessage("§cPlease correctly set up your database connection in the database.yml file.", Bukkit.getConsoleSender());
         AdventureUtils.sendMessage("§cDisabling plugin...", Bukkit.getConsoleSender());
         SchedulerUtils.cancelAllTasks(this);

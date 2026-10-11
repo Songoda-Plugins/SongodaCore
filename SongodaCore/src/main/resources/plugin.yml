@@ -16,6 +16,12 @@ libraries:
   - 'net.kyori:adventure-text-serializer-plain:${adventure.version}'
   - 'net.kyori:adventure-platform-bukkit:${dep.adventure.platform.bukkit.version}'
 softdepend:
+  - Nexo
+  - ItemsAdder
+  - BentoBox
+  - Lands
+  - RedProtect
+  - Residence
   - ProtocolLib
   - PlaceholderAPI
   - Essentials
