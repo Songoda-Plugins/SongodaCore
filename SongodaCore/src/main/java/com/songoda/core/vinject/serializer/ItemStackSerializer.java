@@ -525,7 +525,17 @@ public class ItemStackSerializer implements YamlSerializerBase<ItemStack> {
         if (map.containsKey("Lore")) {
             Object loreObj = map.get("Lore");
             if (loreObj instanceof List<?> list) {
-                AdventureUtils.formatItemLore(meta, (List<String>) list);
+                List<String> lore = new ArrayList<>(list.size());
+                for (int index = 0; index < list.size(); index++) {
+                    Object line = list.get(index);
+                    if (!(line instanceof String loreLine)) {
+                        String value = line == null ? "null" : line.toString();
+                        throw new IllegalArgumentException("Item.Lore[" + index + "] must be a string, but was "
+                                + (line == null ? "null" : line.getClass().getSimpleName()) + ": " + value);
+                    }
+                    lore.add(loreLine);
+                }
+                AdventureUtils.formatItemLore(meta, lore);
             }
         }
 

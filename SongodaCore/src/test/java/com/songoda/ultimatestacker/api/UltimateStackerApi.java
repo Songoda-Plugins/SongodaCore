@@ -6,6 +6,7 @@ public final class UltimateStackerApi {
     private static Object itemManager = new Object();
     private static Object spawnerManager = new Object();
     private static Object blockManager = new Object();
+    private static Object entityManager = new Object();
 
     private UltimateStackerApi() {
     }
@@ -22,9 +23,14 @@ public final class UltimateStackerApi {
         return blockManager;
     }
 
+    public static Object getEntityManager() {
+        return entityManager;
+    }
+
     public static void reset() {
         itemManager = new Object();
         spawnerManager = new Object();
         blockManager = new Object();
+        entityManager = new Object();
     }
 }

@@ -47,21 +47,25 @@ public class UltimateStackerHookTest {
             setManager(hook, "itemManager", new Object());
             setManager(hook, "spawnerManager", new Object());
             setManager(hook, "blockManager", new Object());
+            setManager(hook, "entityManager", new Object());
 
             hook.onEnable();
 
             assertNullManager(hook, "itemManager");
             assertNullManager(hook, "spawnerManager");
             assertNullManager(hook, "blockManager");
+            assertNullManager(hook, "entityManager");
 
             setManager(hook, "itemManager", new Object());
             setManager(hook, "spawnerManager", new Object());
             setManager(hook, "blockManager", new Object());
+            setManager(hook, "entityManager", new Object());
             hook.onDisable();
 
             assertNullManager(hook, "itemManager");
             assertNullManager(hook, "spawnerManager");
             assertNullManager(hook, "blockManager");
+            assertNullManager(hook, "entityManager");
         }
     }
 
@@ -120,12 +124,14 @@ public class UltimateStackerHookTest {
         assertNotNull(manager(hook, "itemManager"));
         assertNotNull(manager(hook, "spawnerManager"));
         assertNotNull(manager(hook, "blockManager"));
+        assertNotNull(manager(hook, "entityManager"));
     }
 
     private static void assertDisconnected(UltimateStackerHook hook) throws Exception {
         assertNullManager(hook, "itemManager");
         assertNullManager(hook, "spawnerManager");
         assertNullManager(hook, "blockManager");
+        assertNullManager(hook, "entityManager");
     }
 
     private static Object manager(UltimateStackerHook hook, String fieldName) throws Exception {

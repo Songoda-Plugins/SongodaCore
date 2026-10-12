@@ -8,6 +8,7 @@ import net.vortexdevelopment.vinject.database.Database;
 import net.vortexdevelopment.vinject.database.repository.RepositoryContainer;
 import net.vortexdevelopment.vinject.di.ConfigurationContainer;
 import net.vortexdevelopment.vinject.di.DependencyContainer;
+import net.vortexdevelopment.vinject.di.YamlEntryLoadException;
 import com.songoda.core.command.CommandManager;
 import com.songoda.core.compatibility.KnownServerVersions;
 import com.songoda.core.compatibility.ServerProject;
@@ -283,12 +284,27 @@ public abstract class SongodaPlugin extends JavaPlugin {
             // The rejecting callback already initiated shutdown.
         } catch (Exception e) {
             this.emergencyStop = true;
-            AdventureUtils.sendMessage("§cAn error occurred while enabling the plugin: " + e.getMessage(), Bukkit.getConsoleSender());
-            e.printStackTrace();
+            YamlEntryLoadException yamlEntryLoadException = findYamlEntryLoadException(e);
+            if (yamlEntryLoadException != null) {
+                String message = "Configuration error: " + yamlEntryLoadException.getMessage();
+                getLogger().severe(message);
+            } else {
+                AdventureUtils.sendMessage("§cAn error occurred while enabling the plugin: " + e.getMessage(), Bukkit.getConsoleSender());
+                e.printStackTrace();
+            }
             AdventureUtils.sendMessage("<red>===================</red>", Bukkit.getConsoleSender());
             Bukkit.getPluginManager().disablePlugin(this);
             GuiManager.disable();
         }
+    }
+
+    private static YamlEntryLoadException findYamlEntryLoadException(Throwable error) {
+        for (Throwable cause = error; cause != null; cause = cause.getCause()) {
+            if (cause instanceof YamlEntryLoadException yamlEntryLoadException) {
+                return yamlEntryLoadException;
+            }
+        }
+        return null;
     }
 
     private boolean startupStopped() {
@@ -556,10 +572,7 @@ public abstract class SongodaPlugin extends JavaPlugin {
         }
         getLogger().warning("H2 server mode is disabled in database.yml (Disable H2 Server Mode: true).");
         getLogger().warning("This should only be used in rare containerized setups where H2 AUTO_SERVER causes unknown host errors.");
-        getLogger().warning("When disabled, PlugMan reloads will break this plugin's H2 database access. Leave this false in almost all cases.");
-        AdventureUtils.sendMessage("§e[" + getName() + "] H2 server mode is disabled in database.yml.", Bukkit.getConsoleSender());
-        AdventureUtils.sendMessage("§eThis is not recommended for most servers and breaks PlugMan reloads with H2.", Bukkit.getConsoleSender());
-        AdventureUtils.sendMessage("§eOnly use Disable H2 Server Mode when required by your hosting environment.", Bukkit.getConsoleSender());
+        getLogger().warning("When disabled, PlugManX reloads will break this plugin's H2 database access. Leave this false in almost all cases.");
     }
 
     private void connectDatabase() {
@@ -584,8 +597,8 @@ public abstract class SongodaPlugin extends JavaPlugin {
                 getLogger().warning("H2 AUTO_SERVER could not resolve this server's hostname. Retrying without H2 server mode.");
                 try {
                     initializeDatabase(databaseConfig, false);
-                    getLogger().warning("H2 connected with server mode disabled. Set Connection Settings.Disable H2 Server Mode: true in database.yml to keep this setting after restart.");
-                    getLogger().warning("H2 server mode disabled this way can prevent PlugMan reloads from reconnecting.");
+                    getLogger().warning("H2 server mode is unavailable; connected using embedded mode. Set Connection Settings.Disable H2 Server Mode: true in database.yml to keep this setting after restart.");
+                    getLogger().warning("PlugManX reloads are not recommended in embedded H2 mode and may fail to reopen the database file. Fully restart the server after plugin changes.");
                 } catch (Exception retryException) {
                     retryException.addSuppressed(exception);
                     getLogger().severe("H2 could not connect after retrying without server mode. Set Connection Settings.Disable H2 Server Mode: true in database.yml and check the database configuration.");
