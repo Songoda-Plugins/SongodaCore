@@ -61,8 +61,16 @@ A `CompletableFuture` completion may run off-thread; do not initialize Bukkit li
 
 1. Sign in to Songoda, open a plugin you manage, and select its **Licensing** tab.
 2. Create your own development credential for 1–90 days.
-3. Put the returned UUID in `plugins/YourPlugin/license.key` in a local, uninjected build.
-4. Pass the displayed product UUID in verification.
+3. Put the displayed product UUID and returned creator credential UUID, in that order on separate lines, in
+   `plugins/YourPlugin/license.key` for a local, uninjected build:
+
+   ```text
+   <product UUID>
+   <creator credential UUID>
+   ```
+
+   Existing one-line `license.key` files that contain only the credential remain supported when the product UUID is
+   supplied to verification or through the `songoda.license.product-id` system property.
 
 For compatibility, local builds also continue to read `product.key` when `license.key` is not present.
 

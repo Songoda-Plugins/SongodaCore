@@ -157,10 +157,11 @@ protected void verifyLicense() throws PluginVerificationException {
 
 Use `verifySongodaLicense(true)` only when the plugin intentionally accepts trial grants. The marketplace discovers
 the client after shading by scanning its placeholder fields. It injects the published license identity, which takes
-precedence over local settings. For local development builds, pass the product UUID to
-`verifySongodaLicense(productId)` or set `-Dsongoda.license.product-id=<product UUID>`, then place the creator
-development credential at `plugins/<PluginName>/license.key`. The client checks the local cache and requests a
-refreshed grant as needed; `product.key` remains supported as a legacy fallback.
+precedence over local settings. For local development builds, put the product UUID and creator development credential,
+in that order on separate lines, in `plugins/<PluginName>/license.key`. Alternatively, pass the product UUID to
+`verifySongodaLicense(productId)` or set `-Dsongoda.license.product-id=<product UUID>` and keep only the credential in
+`license.key`. The client checks the local cache and requests a refreshed grant as needed; `product.key` remains
+supported as a legacy fallback.
 Because the client is not included in SongodaCore's runtime JAR, a paid plugin must package it. Free plugins can
 continue to depend on SongodaCore without adding the client.
 

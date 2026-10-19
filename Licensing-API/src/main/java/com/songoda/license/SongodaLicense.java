@@ -129,16 +129,22 @@ public final class SongodaLicense {
 
     /**
      * Blocking verification without a plugin instance. Injected identity takes precedence.
-     * Local builds read a creator-issued credential from dataFolder/license.key, with product.key as a legacy fallback.
+     * Local builds read the product UUID and creator-issued credential from dataFolder/license.key, with product.key
+     * as a legacy fallback.
      * No local key, environment variable, or JVM property changes the trust authority.
      */
     public static Result check(File dataFolder, String productId, String pluginVersion) {
         Objects.requireNonNull(dataFolder, "dataFolder");
-        String product = requireUuid(isInjected(PRODUCT_ID) ? PRODUCT_ID : productId);
+        String product = productId;
         String licenseId;
         String userId;
         try {
-            licenseId = resolveLicenseId(dataFolder);
+            LocalCredentials credentials = resolveCredentials(dataFolder);
+            if (!isInjected(PRODUCT_ID) && (product == null || product.isBlank())) {
+                product = credentials.productId();
+            }
+            product = requireUuid(isInjected(PRODUCT_ID) ? PRODUCT_ID : product);
+            licenseId = credentials.licenseId();
             userId = isInjected(USER_ID) ? requireUuid(USER_ID) : null;
             if (isInjected(LICENSE) && userId == null) {
                 return failure(Status.INVALID, "Incomplete marketplace identity", licenseId, product);
@@ -183,9 +189,9 @@ public final class SongodaLicense {
         return online;
     }
 
-    private static String resolveLicenseId(File folder) throws IOException {
+    private static LocalCredentials resolveCredentials(File folder) throws IOException {
         if (isInjected(LICENSE)) {
-            return LICENSE;
+            return new LocalCredentials(null, LICENSE);
         }
         Path file = folder.toPath().resolve("license.key");
         if (!Files.exists(file)) {
@@ -194,7 +200,20 @@ public final class SongodaLicense {
         if (!Files.isRegularFile(file) || Files.size(file) > 256) {
             throw new IOException("Missing license credential");
         }
-        return Files.readString(file, StandardCharsets.UTF_8).trim();
+        List<String> values = Files.readAllLines(file, StandardCharsets.UTF_8).stream()
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toList();
+        if (values.size() == 1) {
+            return new LocalCredentials(null, values.get(0));
+        }
+        if (values.size() == 2) {
+            return new LocalCredentials(values.get(0), values.get(1));
+        }
+        throw new IOException("Invalid license key format");
+    }
+
+    private record LocalCredentials(String productId, String licenseId) {
     }
 
     private static String requireUuid(String value) {
