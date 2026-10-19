@@ -12,8 +12,27 @@ SongodaCore provides the `SongodaPlugin` base class and implements its shared ru
 - database and repository support;
 - GUI, Adventure, platform, and compatibility utilities.
 
-Licensing is provided separately by the sibling `Licensing-API` module. SongodaCore does not automatically verify
-licenses, start license tasks, enforce trial limits, or wrap the consuming plugin's lifecycle hooks.
+## Legacy H2 database conversion
+
+When a plugin uses H2 and SongodaCore finds an existing file database that the current H2 driver cannot open, it sends
+the closed `.mv.db` file to Songoda's hosted converter at `https://songoda-reborn.com/api/database-convert/v1/h2`.
+The converter returns a current-format H2 file. SongodaCore validates it locally, saves the original file as a
+`.pre-v2-<timestamp>.bak` backup, and only then replaces the database. The conversion request uses HTTPS and carries
+the configured H2 username and password in request headers. No H2 1.4 library is bundled with consuming plugins.
+
+## Plugin update backups
+
+Before a plugin's update migrations run, SongodaCore compares the plugin version and JAR checksum with the last
+version that completed startup. A replaced SNAPSHOT JAR triggers a backup even when its version string is unchanged.
+When the version or JAR changed, Core writes and verifies a ZIP containing the complete existing plugin data folder under
+`plugins/.songoda-backups/`. The archive is named with the plugin name, old and new versions, and a UTC timestamp.
+Core keeps the original files available while plugin migrations run and records the new version only after startup
+succeeds. If archive creation fails, plugin startup stops before migrations can modify its data.
+
+Licensing is opt-in. Free plugins do not need the licensing client; paid plugins can call
+`verifySongodaLicense()` from `verifyLicense()` to validate a Songoda grant and stop startup when verification fails.
+SongodaCore rejects trial grants by default. A plugin that explicitly accepts trials can call
+`verifySongodaLicense(true)`. SongodaCore does not apply player or IP limits.
 
 ## Requirements
 
@@ -113,33 +132,37 @@ For example, a plugin whose main package is
 </plugin>
 ```
 
-## Consuming Licensing-API
+## Paid plugin licensing
 
-Add the standalone license client when a plugin needs Songoda licensing:
+The licensing client is a provided compile dependency of SongodaCore, so free plugins do not package or require it.
+Paid plugins must add the standalone client as a dependency and shade/relocate it into their own JAR:
 
 ```xml
 <dependency>
     <groupId>com.songoda</groupId>
     <artifactId>Licensing-API</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
-Then keep verification explicit in the plugin:
+Then opt in through the existing lifecycle hook:
 
 ```java
 
 @Override
 protected void verifyLicense() throws PluginVerificationException {
-    SongodaLicense.Result result = SongodaLicense.verify(this);
-    if (!result.isValid()) {
-        throw new PluginVerificationException(result.message());
-    }
+    verifySongodaLicense();
 }
 ```
 
-The marketplace discovers the license API after shading by scanning for its placeholder fields. Consumers do not need to
-configure a relocated fully qualified class name.
+Use `verifySongodaLicense(true)` only when the plugin intentionally accepts trial grants. The marketplace discovers
+the client after shading by scanning its placeholder fields. It injects the published license identity, which takes
+precedence over local settings. For local development builds, pass the product UUID to
+`verifySongodaLicense(productId)` or set `-Dsongoda.license.product-id=<product UUID>`, then place the creator
+development credential at `plugins/<PluginName>/license.key`. The client checks the local cache and requests a
+refreshed grant as needed; `product.key` remains supported as a legacy fallback.
+Because the client is not included in SongodaCore's runtime JAR, a paid plugin must package it. Free plugins can
+continue to depend on SongodaCore without adding the client.
 
 The important part is the consumer-specific SongodaCore relocation:
 

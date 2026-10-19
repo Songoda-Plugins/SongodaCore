@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.songoda</groupId>
         <artifactId>SongodaCoreParent</artifactId>
-        <version>5.0.2-SNAPSHOT</version>
+        <version>5.0.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -58,6 +58,14 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Paid plugins opt in to this client and package it in their own JAR. -->
+        <dependency>
+            <groupId>com.songoda</groupId>
+            <artifactId>Licensing-API</artifactId>
+            <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
 

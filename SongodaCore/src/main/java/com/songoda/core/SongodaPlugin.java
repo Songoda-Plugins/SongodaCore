@@ -11,6 +11,8 @@ import net.vortexdevelopment.vinject.di.DependencyContainer;
 import net.vortexdevelopment.vinject.di.YamlEntryLoadException;
 import com.songoda.core.command.CommandManager;
 import com.songoda.core.compatibility.KnownServerVersions;
+import com.songoda.core.database.H2DatabaseUpgrade;
+import com.songoda.core.database.PluginDataBackup;
 import com.songoda.core.compatibility.ServerProject;
 import com.songoda.core.compatibility.folia.SchedulerUtils;
 import com.songoda.core.compatibility.ServerVersion;
@@ -28,6 +30,7 @@ import com.songoda.core.text.hologram.HologramManager;
 import com.songoda.core.text.lang.Lang;
 import com.songoda.core.utils.PluginInitState;
 import com.songoda.core.vinject.interceptor.ManagedEventHandlerInterceptor;
+import com.songoda.license.SongodaLicense;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -45,6 +48,7 @@ import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -55,6 +59,8 @@ import java.util.logging.Level;
 
 @Injectable
 public abstract class SongodaPlugin extends JavaPlugin {
+
+    private static final String LICENSE_PRODUCT_ID_PROPERTY = "songoda.license.product-id";
 
     public static final KnownServerVersions MINIMUM_SUPPORTED_SERVER_VERSION =
             KnownServerVersions.V1_18_2;
@@ -126,13 +132,85 @@ public abstract class SongodaPlugin extends JavaPlugin {
     /**
      * Verify the plugin license. Called during {@code onLoad()} and again near the end of {@code onEnable()}.
      *
-     * <p>Return normally to continue startup. Throw {@link PluginVerificationException} to stop the plugin.
+     * <p>Override this only when the plugin requires license verification. Free plugins can use the default
+     * implementation. Return normally to continue startup. Throw {@link PluginVerificationException} to stop the plugin.
      * Consumer plugins own any trial or player-limit policy themselves; SongodaCore does not apply a
      * builtin player-count fallback.</p>
      *
      * @throws PluginVerificationException if the plugin must be disabled
      */
-    protected abstract void verifyLicense() throws PluginVerificationException;
+    protected void verifyLicense() throws PluginVerificationException {
+    }
+
+    /**
+     * Verifies this plugin with Songoda's licensing service and rejects trial grants.
+     * Call this from {@link #verifyLicense()} only in plugins that require a paid license.
+     *
+     * @throws PluginVerificationException if verification fails or returns a trial grant
+     */
+    protected final void verifySongodaLicense() throws PluginVerificationException {
+        verifySongodaLicense(false);
+    }
+
+    /**
+     * Verifies this plugin with Songoda's licensing service and rejects trial grants.
+     * Marketplace-injected product identity takes precedence over the supplied local product UUID.
+     *
+     * @param productId product UUID used for uninjected local builds
+     * @throws PluginVerificationException if verification fails or a trial grant is returned
+     */
+    protected final void verifySongodaLicense(String productId) throws PluginVerificationException {
+        verifySongodaLicense(productId, false);
+    }
+
+    /**
+     * Verifies this plugin with Songoda's licensing service.
+     * Marketplace-injected product identity takes precedence; local builds use the
+     * {@code songoda.license.product-id} system property and {@code license.key} in this plugin's data folder.
+     *
+     * @param allowTrial whether trial grants may start this plugin
+     * @throws PluginVerificationException if verification fails or a disallowed trial grant is returned
+     */
+    protected final void verifySongodaLicense(boolean allowTrial) throws PluginVerificationException {
+        verifySongodaLicense(null, allowTrial);
+    }
+
+    /**
+     * Verifies this plugin with Songoda's licensing service.
+     * Marketplace-injected product identity takes precedence. Local builds use the supplied product UUID,
+     * falling back to {@code songoda.license.product-id} when no UUID is supplied.
+     *
+     * @param productId product UUID used for uninjected local builds
+     * @param allowTrial whether trial grants may start this plugin
+     * @throws PluginVerificationException if verification fails or a disallowed trial grant is returned
+     */
+    protected final void verifySongodaLicense(String productId, boolean allowTrial) throws PluginVerificationException {
+        SongodaLicense.Result result;
+        try {
+            String configuredProductId = System.getProperty(LICENSE_PRODUCT_ID_PROPERTY);
+            String localProductId = configuredProductId == null || configuredProductId.isBlank()
+                    ? productId
+                    : configuredProductId;
+            result = SongodaLicense.verify(this, localProductId);
+        } catch (RuntimeException exception) {
+            throw new PluginVerificationException(songodaLicenseFailureMessage());
+        }
+
+        if (!result.isValid()) {
+            throw new PluginVerificationException(songodaLicenseFailureMessage());
+        }
+        if (result.isTrial() && !allowTrial) {
+            throw new PluginVerificationException(songodaLicenseFailureMessage());
+        }
+    }
+
+    private String songodaLicenseFailureMessage() {
+        return "Error validating the license for " + getName() + ". Please contact Songoda support.";
+    }
+
+    private Path pluginArtifactPath() {
+        return getFile() == null ? null : getFile().toPath();
+    }
 
     /**
      * Returns the oldest Minecraft version supported by this plugin.
@@ -169,6 +247,20 @@ public abstract class SongodaPlugin extends JavaPlugin {
         }
 
         if (emergencyStop || disableStarted) {
+            return;
+        }
+
+        try {
+            Path dataDirectory = getDataFolder().toPath();
+            Path backupDirectory = dataDirectory.getParent().resolve(".songoda-backups");
+            Path backup = PluginDataBackup.backupIfChanged(
+                    dataDirectory, backupDirectory, getName(), getDescription().getVersion(), pluginArtifactPath());
+            if (backup != null) {
+                getLogger().info("Created a full plugin data backup before migration: " + backup);
+            }
+        } catch (IOException exception) {
+            getLogger().severe("Could not create a full plugin data backup before migration: " + exception.getMessage());
+            stopForVerificationFailure("Plugin startup stopped because its data backup could not be completed.", null);
             return;
         }
 
@@ -276,6 +368,12 @@ public abstract class SongodaPlugin extends JavaPlugin {
             } catch (PluginVerificationException e) {
                 stopForVerificationFailure(e.getMessage(), e);
                 return;
+            }
+
+            try {
+                PluginDataBackup.markVersion(getDataFolder().toPath(), getDescription().getVersion(), pluginArtifactPath());
+            } catch (IOException exception) {
+                throw new IllegalStateException("Could not record the successful plugin data migration version.", exception);
             }
 
             AdventureUtils.sendMessage("<green>Enabled successfully!</green>", Bukkit.getConsoleSender());
@@ -586,6 +684,13 @@ public abstract class SongodaPlugin extends JavaPlugin {
             String databaseType = databaseConfig.getString(DATABASE_CONFIG_PATH + "Type").toLowerCase(Locale.ENGLISH);
             boolean disableH2ServerMode = databaseConfig.getBoolean(DATABASE_DISABLE_H2_SERVER_MODE_KEY, false);
             warnIfH2ServerModeDisabled(databaseType, disableH2ServerMode);
+            if ("h2".equals(databaseType)) {
+                H2DatabaseUpgrade.upgradeIfLegacy(
+                        new File(getDataFolder(), getName().toLowerCase(Locale.ENGLISH)).toPath(),
+                        databaseConfig.getString(DATABASE_CONFIG_PATH + "Username"),
+                        databaseConfig.getString(DATABASE_CONFIG_PATH + "Password"),
+                        getLogger(), !disableH2ServerMode);
+            }
             try {
                 initializeDatabase(databaseConfig, !disableH2ServerMode);
             } catch (Exception exception) {
@@ -657,11 +762,16 @@ public abstract class SongodaPlugin extends JavaPlugin {
 
     private void handleDatabaseError(Exception e, boolean printStackTrace) {
         this.emergencyStop = true;
-        AdventureUtils.sendMessage("§cCould not connect to the database: " + e.getMessage(), Bukkit.getConsoleSender());
-        if (printStackTrace) {
+        boolean h2ConversionFailure = e instanceof H2DatabaseUpgrade.H2ConversionException;
+        AdventureUtils.sendMessage(h2ConversionFailure
+                ? "§cH2 database conversion failed."
+                : "§cCould not connect to the database: " + e.getMessage(), Bukkit.getConsoleSender());
+        if (printStackTrace && !h2ConversionFailure) {
             e.printStackTrace();
         }
-        AdventureUtils.sendMessage("§cPlease correctly set up your database connection in the database.yml file.", Bukkit.getConsoleSender());
+        AdventureUtils.sendMessage(h2ConversionFailure
+                ? "§cThe original database was preserved. Check the converter connection and database credentials, then restart the server to retry."
+                : "§cPlease correctly set up your database connection in the database.yml file.", Bukkit.getConsoleSender());
         AdventureUtils.sendMessage("§cDisabling plugin...", Bukkit.getConsoleSender());
         SchedulerUtils.cancelAllTasks(this);
         HandlerList.unregisterAll(this);

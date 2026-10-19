@@ -2,3 +2,4 @@
 **/target/
 **/dependency-reduced-pom.xml
 *.iml
+/SongodaCore/src/test/resources/database/legacy-h2-1.4.200.mv.db
