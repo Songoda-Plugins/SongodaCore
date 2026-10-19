@@ -17,7 +17,7 @@ Consumers control startup, retries between checks, and player limits. The module
     <dependency>
         <groupId>com.songoda</groupId>
         <artifactId>Licensing-API</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -61,8 +61,10 @@ A `CompletableFuture` completion may run off-thread; do not initialize Bukkit li
 
 1. Sign in to Songoda, open a plugin you manage, and select its **Licensing** tab.
 2. Create your own development credential for 1–90 days.
-3. Put the returned UUID in `plugins/YourPlugin/product.key` in a local, uninjected build.
+3. Put the returned UUID in `plugins/YourPlugin/license.key` in a local, uninjected build.
 4. Pass the displayed product UUID in verification.
+
+For compatibility, local builds also continue to read `product.key` when `license.key` is not present.
 
 Credentials are restricted to the account and plugin that issued them, with up to three active server IPs.
 Only users with current plugin management access can create/read/revoke their own credential.
@@ -83,11 +85,22 @@ Only ES256 tokens with the expected issuer, audience, key ID, protocol version, 
 Unknown license types, wildcard products, missing required claims, duplicate JSON fields, and invalid signatures fail closed.
 There is no 24-hour expiration grace period.
 
-Verification and public keys use fixed Songoda HTTPS endpoints with normal certificate validation and no redirects.
-No environment variable, JVM property, local PEM, or classpath resource changes the API's verification authority.
-The first check after a JVM restart needs Songoda online to authenticate its public key.
-Trusted keys are cached in memory and refreshed every five minutes; a previously authenticated key remains usable
-during a network outage. No unsigned key cache is trusted from disk.
+Verification and public keys default to `https://songoda-reborn.com` and use normal certificate validation with
+redirects disabled. Operators can override the base origin for both endpoints with a JVM system property:
+
+```text
+-Dsongoda.license.server-url=https://license.example.com
+```
+
+The value must be an HTTPS origin without credentials, path, query, or fragment. The override changes where the
+client sends license identity and fetches the verification key, but it does not change which signing key is trusted.
+The returned `keyId` and encoded public key must exactly match the production key compiled into this API release.
+Local PEM files, environment variables, and classpath resources cannot alter this pin. An alternate endpoint that
+does not present the pinned key is rejected, even if it returns an otherwise validly signed token.
+
+The first check after a JVM restart needs an endpoint that serves the pinned key. The trusted key is cached in memory
+and refreshed every five minutes; a previously authenticated key remains usable during a network outage. No unsigned
+key cache is trusted from disk.
 This assumes an untampered client and JVM trust configuration; server owners can still modify plugin bytecode or the JVM.
 
 The disk cache contains only the signed token. Refresh is based on JWT `exp`, separate from license expiry:
@@ -105,18 +118,19 @@ Existing legacy tokens are intentionally rejected and replaced by online verific
 The backend generates fresh private signing keys server-side, persists them in the server database,
 and excludes the legacy development key resources from its artifact.
 An active legacy bundled key is automatically retired when signing/key lookup is used.
-Administrators rotate keys in the signing administration page; clients refresh on an unknown key ID.
-Back up and restrict access to the signing-key database. Never ship private keys with a plugin or the API.
+The current API release pins key ID `2a4ca413fbccab79`. Key rotation is not transparent: publish a new API release
+containing the next trusted key before changing the server's signing key, then allow dependent plugins to update
+before the server starts issuing tokens with that key. Old API releases reject unknown keys. Back up and restrict
+access to the signing-key database. Never ship private keys with a plugin or the API.
 
 ## Build and publishing
 
-From the existing SongodaCore parent directory:
+This module is independently versioned and can be built without the SongodaCore parent reactor:
 
 ```text
-mvn -pl Licensing-API -am clean verify
-mvn -pl Licensing-API -am deploy
+mvn clean verify
+mvn deploy
 ```
 
-The parent POM must be available alongside the module. Deployment inherits the configured Songoda repository
-and requires the matching Maven credentials. Verify the repository is a writable deployment destination
-before publishing; this build does not deploy automatically.
+Deployment targets the Songoda Maven repository configured in the POM and requires matching credentials in Maven
+settings. A successful local build does not publish the artifact.

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.X509EncodedKeySpec;
@@ -36,7 +38,7 @@ import java.util.concurrent.Executor;
 /**
  * Standalone, shadeable Songoda license client. No lifecycle or trial policy is installed.
  * Synchronous calls block; use verifyAsync from plugin startup and schedule Bukkit work
- * back onto the server thread. Trust keys are obtained only from Songoda over HTTPS.
+ * back onto the server thread. Signing keys must match the production key pin in this release.
  */
 public final class SongodaLicense {
     /**
@@ -52,8 +54,10 @@ public final class SongodaLicense {
      */
     public static final String PRODUCT_ID;
 
-    private static final URI VERIFY_URI = URI.create("https://songoda-reborn.com/api/license/verify");
-    private static final URI KEY_URI = URI.create("https://songoda-reborn.com/api/license/key");
+    private static final String SERVER_URL_PROPERTY = "songoda.license.server-url";
+    private static final URI DEFAULT_SERVER_URI = URI.create("https://songoda-reborn.com");
+    private static final String PINNED_KEY_ID = "2a4ca413fbccab79";
+    private static final String PINNED_KEY_DER = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYoDMmurekOXPGhzv7AfG8VmLzXAyHRbHqfYsAmwEPhmQ2sDJuhkcmkTq5mt7xUpctumEWrKU40Wgkaxfpj1axg==";
     private static final String CACHE_FILE = ".license";
     private static final int MAX_NETWORK_ATTEMPTS = 3;
     private static final int MAX_DOCUMENT_LENGTH = 65_536;
@@ -125,7 +129,7 @@ public final class SongodaLicense {
 
     /**
      * Blocking verification without a plugin instance. Injected identity takes precedence.
-     * Local builds read a creator-issued credential from dataFolder/product.key.
+     * Local builds read a creator-issued credential from dataFolder/license.key, with product.key as a legacy fallback.
      * No local key, environment variable, or JVM property changes the trust authority.
      */
     public static Result check(File dataFolder, String productId, String pluginVersion) {
@@ -183,7 +187,10 @@ public final class SongodaLicense {
         if (isInjected(LICENSE)) {
             return LICENSE;
         }
-        Path file = folder.toPath().resolve("product.key");
+        Path file = folder.toPath().resolve("license.key");
+        if (!Files.exists(file)) {
+            file = folder.toPath().resolve("product.key");
+        }
         if (!Files.isRegularFile(file) || Files.size(file) > 256) {
             throw new IOException("Missing license credential");
         }
@@ -226,7 +233,7 @@ public final class SongodaLicense {
     private static Result verifyOnline(String licenseId, String product, String version, File folder, String userId, TrustedKey key) {
         try {
             String body = "{\"license_id\":" + Json.quote(licenseId) + ",\"product_id\":" + Json.quote(product) + ",\"plugin_version\":" + Json.quote(version == null ? "" : version) + "}";
-            HttpRequest request = HttpRequest.newBuilder(VERIFY_URI).timeout(Duration.ofSeconds(15)).header("Content-Type", "application/json").header("User-Agent", "SongodaLicense/2.0.0").POST(HttpRequest.BodyPublishers.ofString(body)).build();
+            HttpRequest request = HttpRequest.newBuilder(endpoint("/api/license/verify")).timeout(Duration.ofSeconds(15)).header("Content-Type", "application/json").header("User-Agent", "SongodaLicense/1.0.0").POST(HttpRequest.BodyPublishers.ofString(body)).build();
             HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             int status = response.statusCode();
             if (status >= 400 && status < 500 && status != 408 && status != 429) {
@@ -259,7 +266,7 @@ public final class SongodaLicense {
             return refreshProductionKey();
         } catch (IOException exception) {
             if (trustedKey != null) {
-                // A key previously authenticated over HTTPS remains usable during an outage.
+                // A previously pinned key remains usable during an outage.
                 return trustedKey;
             }
             throw exception;
@@ -267,20 +274,54 @@ public final class SongodaLicense {
     }
 
     private static synchronized TrustedKey refreshProductionKey() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder(KEY_URI).timeout(Duration.ofSeconds(15)).GET().build();
+        HttpRequest request = HttpRequest.newBuilder(endpoint("/api/license/key")).timeout(Duration.ofSeconds(15)).GET().build();
         HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-        if (response.statusCode() != 200) {
+        if (response.statusCode() != 200 || response.body().length() > MAX_DOCUMENT_LENGTH) {
             throw new IOException("Verification key unavailable");
         }
-        Map<String, Object> json = Json.object(response.body());
+        TrustedKey verifiedKey = parseTrustedKey(response.body(), Instant.now());
+        trustedKey = verifiedKey;
+        return verifiedKey;
+    }
+
+    static URI validateServerBaseUrl(String value) {
+        if (value == null || value.isBlank() || value.length() > 2_048) {
+            throw new IllegalArgumentException("Invalid licensing server URL");
+        }
+        try {
+            URI uri = new URI(value.trim());
+            int port = uri.getPort();
+            if (!uri.isAbsolute() || uri.isOpaque() || !"https".equalsIgnoreCase(uri.getScheme()) || uri.getHost() == null || uri.getRawUserInfo() != null || uri.getRawQuery() != null || uri.getRawFragment() != null || (uri.getRawPath() != null && !uri.getRawPath().isEmpty() && !"/".equals(uri.getRawPath())) || (port != -1 && (port < 1 || port > 65_535))) {
+                throw new IllegalArgumentException("Licensing server URL must be an HTTPS origin without credentials, path, query, or fragment");
+            }
+            return new URI("https", null, uri.getHost(), uri.getPort(), null, null, null);
+        } catch (URISyntaxException exception) {
+            throw new IllegalArgumentException("Invalid licensing server URL", exception);
+        }
+    }
+
+    static URI endpoint(String path) {
+        String configured = System.getProperty(SERVER_URL_PROPERTY);
+        URI base = configured == null ? DEFAULT_SERVER_URI : validateServerBaseUrl(configured);
+        return base.resolve(path);
+    }
+
+    static TrustedKey parseTrustedKey(String response, Instant fetchedAt) throws Exception {
+        if (response == null || response.length() > MAX_DOCUMENT_LENGTH) {
+            throw new IllegalArgumentException("Invalid verification key document");
+        }
+        Map<String, Object> json = Json.object(response);
         String pem = string(json, "publicKeyPem");
         String encoded = pem.replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "").replaceAll("\\s", "");
-        ECPublicKey key = (ECPublicKey) KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(encoded)));
+        byte[] keyDer = Base64.getDecoder().decode(encoded);
+        if (!PINNED_KEY_ID.equals(string(json, "keyId")) || !MessageDigest.isEqual(Base64.getDecoder().decode(PINNED_KEY_DER), keyDer)) {
+            throw new IllegalArgumentException("Verification key does not match the compiled Songoda trust pin");
+        }
+        ECPublicKey key = (ECPublicKey) KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(keyDer));
         if (key.getParams().getOrder().bitLength() != 256) {
             throw new IllegalArgumentException("Expected P-256 key");
         }
-        trustedKey = new TrustedKey(string(json, "keyId"), key, Instant.now());
-        return trustedKey;
+        return new TrustedKey(PINNED_KEY_ID, key, fetchedAt);
     }
 
     static Result verifyToken(String token, String product, String licenseId, String userId, boolean allowDevelopment, TrustedKey key, boolean fromCache) {

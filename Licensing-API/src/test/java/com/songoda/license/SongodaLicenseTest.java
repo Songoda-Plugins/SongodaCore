@@ -6,6 +6,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -157,6 +158,48 @@ class SongodaLicenseTest {
         assertEquals("hello\n\"", json.get("text"));
         String value = "line\n\t\"\\";
         assertEquals(value, SongodaLicense.Json.object("{\"text\":" + SongodaLicense.Json.quote(value) + "}").get("text"));
+    }
+
+    @Test
+    void validatesLicensingServerUrlOverrideAsHttpsOrigin() {
+        assertEquals(URI.create("https://licenses.example:8443"), SongodaLicense.validateServerBaseUrl("https://licenses.example:8443/"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("http://licenses.example"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("https://user@licenses.example"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("https://licenses.example/path"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("https://licenses.example?redirect=https://evil.example"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("https://licenses.example#fragment"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("https://licenses.example:65536"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl("licenses.example"));
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.validateServerBaseUrl(" "));
+    }
+
+    @Test
+    void serverUrlOverrideTargetsBothLicenseEndpoints() {
+        String property = "songoda.license.server-url";
+        String previous = System.getProperty(property);
+        try {
+            System.setProperty(property, "https://licenses.example:8443");
+            assertEquals(URI.create("https://licenses.example:8443/api/license/verify"), SongodaLicense.endpoint("/api/license/verify"));
+            assertEquals(URI.create("https://licenses.example:8443/api/license/key"), SongodaLicense.endpoint("/api/license/key"));
+        } finally {
+            if (previous == null) {
+                System.clearProperty(property);
+            } else {
+                System.setProperty(property, previous);
+            }
+        }
+    }
+
+    @Test
+    void acceptsOnlyTheCompiledProductionVerificationKeyPin() throws Exception {
+        String response = "{\"keyId\":\"2a4ca413fbccab79\",\"publicKeyPem\":\"-----BEGIN PUBLIC KEY-----\\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYoDMmurekOXPGhzv7AfG8VmLzXAy\\nHRbHqfYsAmwEPhmQ2sDJuhkcmkTq5mt7xUpctumEWrKU40Wgkaxfpj1axg==\\n-----END PUBLIC KEY-----\"}";
+        SongodaLicense.TrustedKey pinned = SongodaLicense.parseTrustedKey(response, Instant.now());
+        assertEquals("2a4ca413fbccab79", pinned.id());
+
+        String forgedResponse = "{\"keyId\":\"2a4ca413fbccab79\",\"publicKeyPem\":\"" + Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()) + "\"}";
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.parseTrustedKey(forgedResponse, Instant.now()));
+        String wrongIdResponse = response.replace("2a4ca413fbccab79", "other-key-id");
+        assertThrows(IllegalArgumentException.class, () -> SongodaLicense.parseTrustedKey(wrongIdResponse, Instant.now()));
     }
 
     private SongodaLicense.Result verify(String token) {
