@@ -27,6 +27,13 @@ public class MiniMessagePlaceholder {
         this.value = value != null ? value : Component.empty();
     }
 
+    public static MiniMessagePlaceholder of(String placeholder, Object value) {
+        if (value instanceof Component component) {
+            return new MiniMessagePlaceholder(placeholder, component);
+        }
+        return new MiniMessagePlaceholder(placeholder, value == null ? null : value.toString());
+    }
+
     public String replace(String string) {
         return string.replace("<" + this.placeholder + ">", this.value.toString());
     }

@@ -7,6 +7,7 @@ import net.vortexdevelopment.vinject.database.serializer.DatabaseSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -37,17 +38,27 @@ public class LocationSerializer extends DatabaseSerializer<Location> {
 //    @Column(name = "pitch")
 //    private Float pitch;
 
-    // Optional: Override deserialize if you need custom logic (e.g., World lookup)
     @Override
-    public Location deserialize(Map<String, Object> columnValues) {
-        String worldName = (String) columnValues.get("world");
-        Double x = (Double) columnValues.get("x");
-        Double y = (Double) columnValues.get("y");
-        Double z = (Double) columnValues.get("z");
-        Float yaw = (Float) columnValues.get("yaw");
-        Float pitch = (Float) columnValues.get("pitch");
+    public @Nullable Location deserialize(@Nullable Map<String, Object> columnValues) {
+        if (columnValues == null
+                || !(columnValues.get("world") instanceof String worldName) || worldName.isBlank()
+                || !(columnValues.get("x") instanceof Number x)
+                || !(columnValues.get("y") instanceof Number y)
+                || !(columnValues.get("z") instanceof Number z)) {
+            return null;
+        }
 
-        if (worldName == null || x == null || y == null || z == null) {
+        double locationX = x.doubleValue();
+        double locationY = y.doubleValue();
+        double locationZ = z.doubleValue();
+        if (!Double.isFinite(locationX) || !Double.isFinite(locationY) || !Double.isFinite(locationZ)) {
+            return null;
+        }
+
+        Object yawValue = columnValues.get("yaw");
+        Object pitchValue = columnValues.get("pitch");
+        if ((yawValue != null && (!(yawValue instanceof Number yaw) || !Float.isFinite(yaw.floatValue())))
+                || (pitchValue != null && (!(pitchValue instanceof Number pitch) || !Float.isFinite(pitch.floatValue())))) {
             return null;
         }
 
@@ -56,9 +67,13 @@ public class LocationSerializer extends DatabaseSerializer<Location> {
             return null;
         }
 
-        Location location = new Location(world, x, y, z);
-        if (yaw != null) location.setYaw(yaw);
-        if (pitch != null) location.setPitch(pitch);
+        Location location = new Location(world, locationX, locationY, locationZ);
+        if (yawValue instanceof Number yaw) {
+            location.setYaw(yaw.floatValue());
+        }
+        if (pitchValue instanceof Number pitch) {
+            location.setPitch(pitch.floatValue());
+        }
         return location;
     }
 }

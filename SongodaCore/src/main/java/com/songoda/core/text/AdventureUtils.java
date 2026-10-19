@@ -30,6 +30,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -706,6 +707,13 @@ public class AdventureUtils {
 
     public static void applyItemName(ItemMeta meta, Component name) {
         if (name == null || meta == null) {
+            return;
+        }
+        if (meta instanceof SkullMeta) {
+            if (ITEM_NAME_COMPONENT_API) {
+                meta.itemName(null);
+            }
+            meta.displayName(name.decoration(TextDecoration.ITALIC, false));
             return;
         }
         if (ITEM_NAME_COMPONENT_API) {

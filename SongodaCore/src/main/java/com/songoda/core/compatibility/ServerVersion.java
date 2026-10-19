@@ -59,9 +59,14 @@ public class ServerVersion {
         return SERVER_VERSION != null ? SERVER_VERSION : resolveMinecraftVersion();
     }
 
+    private static final java.util.Map<String, Boolean> VERSION_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+
     public static boolean isAtLeastVersion(String version) {
         String serverVersion = getServerVersion();
-        return serverVersion != null && isVersionAtLeast(serverVersion, version);
+        if (serverVersion == null || version == null) {
+            return false;
+        }
+        return VERSION_CACHE.computeIfAbsent(serverVersion + "::" + version, k -> isVersionAtLeast(serverVersion, version));
     }
 
     public static boolean isVersionAtLeast(String version, String minimumVersion) {
