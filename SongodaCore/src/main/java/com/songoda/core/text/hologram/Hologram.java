@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import com.songoda.core.SongodaPlugin;
-import com.songoda.core.compatibility.KnownServerVersions;
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.compatibility.folia.SchedulerUtils;
 import com.songoda.core.text.AdventureUtils;
 import com.songoda.core.text.MiniMessagePlaceholder;
 import com.songoda.core.text.lang.Lang;
 import com.songoda.core.utils.WorldUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 
@@ -474,8 +471,12 @@ public class Hologram {
             HologramManager.removeFake(this);
             return;
         }
-        if (SchedulerUtils.isFolia() && !isTickingWorlds()) {
+        if (SchedulerUtils.isFolia()) {
+            List<ArmorStand> stands = new ArrayList<>(armorStands);
             armorStands.clear();
+            for (ArmorStand armorStand : stands) {
+                SchedulerUtils.runEntityTask(SongodaPlugin.getInstance(), armorStand, armorStand::remove);
+            }
             return;
         }
         if (!SchedulerUtils.isOwnedByCurrentRegion(location)) {
@@ -486,10 +487,6 @@ public class Hologram {
             armorStand.remove();
         }
         armorStands.clear();
-    }
-
-    private static boolean isTickingWorlds() {
-        return !ServerVersion.isAtLeastVersion(KnownServerVersions.V1_19_4) || Bukkit.isTickingWorlds();
     }
 
     void tickAsync() {

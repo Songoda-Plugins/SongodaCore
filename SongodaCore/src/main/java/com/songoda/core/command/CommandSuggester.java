@@ -1,8 +1,5 @@
 package com.songoda.core.command;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -16,8 +13,10 @@ public interface CommandSuggester {
     }
 
     default List<String> filterOnlinePlayers(String arg) {
-        return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName().toLowerCase(Locale.ENGLISH).startsWith(arg.toLowerCase()))
-                .map(Player::getName)
-                .toList();
+        return filterOnlinePlayerNames(arg);
+    }
+
+    static List<String> filterOnlinePlayerNames(String partial) {
+        return OnlinePlayerNameCache.findNamesStartingWith(partial);
     }
 }

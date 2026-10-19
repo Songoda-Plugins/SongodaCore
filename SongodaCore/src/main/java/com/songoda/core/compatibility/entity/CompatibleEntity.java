@@ -37,7 +37,7 @@ public enum CompatibleEntity {
     }
 
     public boolean isEntity(Entity entity) {
-        return isSupported() && entity.getType().name().equalsIgnoreCase(this.name());
+        return entity != null && entity.getType().name().equalsIgnoreCase(this.name()) && isSupported();
     }
 
     public void executeIfSupported(Runnable action) {
@@ -47,7 +47,7 @@ public enum CompatibleEntity {
     }
 
     public void executeIfSupported(Entity entity, Runnable action) {
-        if (isSupported() && entity.getType().name().equalsIgnoreCase(this.name())) {
+        if (entity != null && entity.getType().name().equalsIgnoreCase(this.name()) && isSupported()) {
             action.run();
         }
     }

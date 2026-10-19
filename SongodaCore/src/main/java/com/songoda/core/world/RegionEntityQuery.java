@@ -11,6 +11,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -22,6 +25,53 @@ import java.util.function.ToIntFunction;
 public final class RegionEntityQuery {
 
     private RegionEntityQuery() {
+    }
+
+    /**
+     * Finds nearby entities that can be accessed synchronously by the current owner.
+     * Paper uses its spatial entity query. Folia only reads loaded chunks owned by the
+     * calling region and excludes foreign entities before accessing their state.
+     * This method never loads chunks or schedules a cross-region mutation.
+     *
+     * @param origin owned entity at the center of the search
+     * @param radius half-extent in blocks, clamped between zero and 128
+     * @return nearby entities owned by the current thread
+     */
+    public static @NotNull Collection<Entity> nearbyOwnedEntities(@NotNull Entity origin, double radius) {
+        if (!SchedulerUtils.isOwnedByCurrentRegion(origin)) {
+            return List.of();
+        }
+        radius = Double.isFinite(radius) ? Math.max(0.0, Math.min(radius, 128.0)) : 8.0;
+        if (!SchedulerUtils.isFolia()) {
+            return origin.getNearbyEntities(radius, radius, radius);
+        }
+
+        Location center = origin.getLocation();
+        World world = center.getWorld();
+        if (world == null) {
+            return List.of();
+        }
+        BoundingBox searchArea = origin.getBoundingBox().clone().expand(radius);
+        int minX = (int) Math.floor(searchArea.getMinX()) >> 4;
+        int maxX = (int) Math.floor(searchArea.getMaxX()) >> 4;
+        int minZ = (int) Math.floor(searchArea.getMinZ()) >> 4;
+        int maxZ = (int) Math.floor(searchArea.getMaxZ()) >> 4;
+        List<Entity> result = new ArrayList<>();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                Location chunkLocation = new Location(world, x * 16.0 + 8.0, center.getY(), z * 16.0 + 8.0);
+                if (!SchedulerUtils.isOwnedByCurrentRegion(chunkLocation) || !world.isChunkLoaded(x, z)) {
+                    continue;
+                }
+                for (Entity candidate : world.getChunkAt(x, z).getEntities()) {
+                    if (candidate != origin && SchedulerUtils.isOwnedByCurrentRegion(candidate)
+                            && candidate.getBoundingBox().overlaps(searchArea)) {
+                        result.add(candidate);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**

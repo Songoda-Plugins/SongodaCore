@@ -1,8 +1,7 @@
 package com.songoda.core.utils;
 
-import org.bukkit.Bukkit;
+import com.songoda.core.command.CommandSuggester;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Locale;
@@ -18,8 +17,6 @@ public interface SongodaCommandExecutor extends TabExecutor {
     }
 
     default List<String> filterOnlinePlayers(String arg) {
-        return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName().toLowerCase(Locale.ENGLISH).startsWith(arg.toLowerCase()))
-                .map(Player::getName)
-                .toList();
+        return CommandSuggester.filterOnlinePlayerNames(arg);
     }
 }
