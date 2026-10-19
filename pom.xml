@@ -6,7 +6,7 @@
 
     <groupId>com.songoda</groupId>
     <artifactId>SongodaCoreParent</artifactId>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>5.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>SongodaCoreParent</name>
@@ -14,6 +14,7 @@
     <url>https://github.com/Songoda-Plugins/SongodaCore</url>
 
     <modules>
+        <module>H2-Legacy-Migration</module>
         <module>SongodaCore</module>
         <module>Licensing-API</module>
     </modules>
@@ -28,7 +29,7 @@
         <residence.api.version>6.0.2.3</residence.api.version>
         <luckperms.api.version>5.5</luckperms.api.version>
         <adventure.version>4.26.1</adventure.version>
-        <vinject.version>2.0.2</vinject.version>
+        <vinject.version>2.0.3-SNAPSHOT</vinject.version>
         <maven.yaml.transformer.version>1.0.4</maven.yaml.transformer.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
