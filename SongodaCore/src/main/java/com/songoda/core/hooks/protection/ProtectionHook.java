@@ -11,5 +11,7 @@ public interface ProtectionHook {
 
     boolean canBreak(@NotNull Player player, @NotNull Location location);
 
+    boolean canPlace(@NotNull Player player, @NotNull Location location);
+
     boolean canInteract(@NotNull Player player, @NotNull Location location);
 }

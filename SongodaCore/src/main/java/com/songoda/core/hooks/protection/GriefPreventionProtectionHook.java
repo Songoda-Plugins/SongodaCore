@@ -18,6 +18,12 @@ public final class GriefPreventionProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        Claim claim = GriefPrevention.instance.dataStore.getClaimAt(location, true, null);
+        return claim == null || claim.allowBuild(player, location.getBlock().getType()) == null;
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         Claim claim = GriefPrevention.instance.dataStore.getClaimAt(location, true, null);
         return claim == null || claim.allowAccess(player) == null;

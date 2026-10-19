@@ -27,6 +27,11 @@ public final class BentoBoxProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        return hasPermission(player, location, Flags.PLACE_BLOCKS);
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         return hasPermission(player, location, Flags.CONTAINER);
     }

@@ -19,6 +19,12 @@ public final class UltimateClaimsProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        ClaimsService claimsService = UltimateClaimsApi.getClaimsService();
+        return claimsService != null && claimsService.hasPermission(player, location.getChunk(), ClaimPermission.PLACE.getKey());
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         ClaimsService claimsService = UltimateClaimsApi.getClaimsService();
         return claimsService != null && claimsService.hasPermission(player, location.getChunk(), ClaimPermission.INTERACT.getKey());

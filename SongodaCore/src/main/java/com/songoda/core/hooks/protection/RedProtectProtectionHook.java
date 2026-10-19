@@ -22,6 +22,16 @@ public final class RedProtectProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        Region region = RedProtect.get().getAPI().getRegion(location);
+        if (region == null) {
+            return true;
+        }
+
+        return region.canBuild(player);
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         Region region = RedProtect.get().getAPI().getRegion(location);
         return region == null || region.canChest(player);

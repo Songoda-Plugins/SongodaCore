@@ -31,6 +31,11 @@ public final class LandsProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        return hasFlag(player, location, Flags.BLOCK_PLACE);
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         return hasFlag(player, location, Flags.INTERACT_CONTAINER);
     }

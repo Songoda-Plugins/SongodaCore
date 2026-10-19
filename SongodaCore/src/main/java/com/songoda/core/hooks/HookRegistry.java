@@ -73,6 +73,17 @@ public final class HookRegistry {
     }
 
     /**
+     * Checks whether a player can place at a location according to every registered protection plugin that is enabled.
+     *
+     * @param player player attempting the action
+     * @param location target location
+     * @return false if any available provider denies the action
+     */
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        return checkProtectionHooks(player, location, ProtectionHook::canPlace);
+    }
+
+    /**
      * Checks whether a player can interact at a location according to every registered protection plugin that is enabled.
      *
      * @param player player attempting the action

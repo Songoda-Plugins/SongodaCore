@@ -24,6 +24,16 @@ public final class WorldGuardProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        return WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
+                BukkitAdapter.adapt(location),
+                WorldGuardPlugin.inst().wrapPlayer(player),
+                Flags.BUILD,
+                Flags.BLOCK_PLACE
+        );
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         return WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
                 BukkitAdapter.adapt(location),

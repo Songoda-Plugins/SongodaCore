@@ -26,6 +26,12 @@ public final class ResidenceProtectionHook implements ProtectionHook {
     }
 
     @Override
+    public boolean canPlace(@NotNull Player player, @NotNull Location location) {
+        ResidencePlayer residencePlayer = this.residence.getPlayerManager().getResidencePlayer(player);
+        return residencePlayer.canPlaceBlock(location.getBlock(), false);
+    }
+
+    @Override
     public boolean canInteract(@NotNull Player player, @NotNull Location location) {
         if (this.residence.isDisabledWorldListener(location.getWorld()) || this.residence.isResAdminOn(player)) {
             return true;
