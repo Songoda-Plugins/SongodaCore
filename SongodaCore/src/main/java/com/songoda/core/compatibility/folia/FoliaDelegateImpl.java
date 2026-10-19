@@ -20,15 +20,22 @@ public class FoliaDelegateImpl implements FoliaDelegate {
         return entity.getScheduler().runDelayed(plugin, callback(runnable), () -> { }, delay);
     }
 
+
     @Override
     public Object runEntityTimer(Plugin plugin, Entity entity, Runnable runnable, long delay, long period) {
         return entity.getScheduler().runAtFixedRate(plugin, callback(runnable), () -> { }, delay, period);
     }
 
     @Override
+    public Object runEntityTimer(Plugin plugin, Entity entity, Runnable runnable, Runnable retired, long delay, long period) {
+        return entity.getScheduler().runAtFixedRate(plugin, callback(runnable), retired, delay, period);
+    }
+
+    @Override
     public Object runLocation(Plugin plugin, Location location, Runnable runnable) {
         return plugin.getServer().getRegionScheduler().run(plugin, location, callback(runnable));
     }
+
 
     @Override
     public Object runLocationLater(Plugin plugin, Location location, Runnable runnable, long delay) {

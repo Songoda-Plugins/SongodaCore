@@ -9,9 +9,13 @@ public interface FoliaDelegate {
 
     Object runEntityLater(Plugin plugin, Entity entity, Runnable runnable, long delay);
 
+
     Object runEntityTimer(Plugin plugin, Entity entity, Runnable runnable, long delay, long period);
 
+    Object runEntityTimer(Plugin plugin, Entity entity, Runnable runnable, Runnable retired, long delay, long period);
+
     Object runLocation(Plugin plugin, Location location, Runnable runnable);
+
 
     Object runLocationLater(Plugin plugin, Location location, Runnable runnable, long delay);
 
