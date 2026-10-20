@@ -102,6 +102,9 @@ public final class H2DatabaseConversionClient {
             throw new IOException("H2 database conversion was interrupted.", exception);
         } catch (IOException exception) {
             Files.deleteIfExists(destination);
+            if (exception.getMessage() == null) {
+                throw new IOException("Could not contact Songoda's H2 conversion service.", exception);
+            }
             throw exception;
         }
     }
