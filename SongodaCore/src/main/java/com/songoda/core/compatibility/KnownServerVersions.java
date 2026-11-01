@@ -33,7 +33,8 @@ public enum KnownServerVersions {
     V26_1,
     V26_1_2,
     V26_2,
-    V26_3;
+    V26_3,
+    V26_4;
 
     private final String versionString;
 

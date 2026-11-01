@@ -28,7 +28,7 @@ public class HologramListener implements Listener {
 
                 // First, clear any out of session holograms in this chunk
                 String sessionId = armorStand.getPersistentDataContainer().get(HologramManager.getSessionIdKey(), PersistentDataType.STRING);
-                if (sessionId != null && sessionId.equals(HologramManager.getSessionId())) {
+                if (sessionId != null && !sessionId.equals(HologramManager.getSessionId())) {
                     armorStand.remove();
                 }
             }

@@ -480,8 +480,10 @@ public class HologramManager {
             return;
         }
         Set<Hologram> registeredHolograms = getHologramsView();
-        for (Hologram hologram : registeredHolograms) {
-            hologram.remove();
+        if (SongodaPlugin.getInstance().isEnabled()) {
+            for (Hologram hologram : registeredHolograms) {
+                hologram.remove();
+            }
         }
         holograms.clear();
         hologramsByChunk.clear();
