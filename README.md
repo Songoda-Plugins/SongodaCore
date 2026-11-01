@@ -19,10 +19,18 @@ with [VInject](https://github.com/vortexdevelopment-net/VInject) providing depen
 | --- | --- |
 | [`SongodaCore`](SongodaCore/README.md) | Shared runtime, direct VInject integration, and `SongodaPlugin` base class. |
 | [`Licensing-API`](Licensing-API/README.md) | Standalone Bukkit/Paper license client that can be shaded into a plugin. |
+| [`SongodaPluginBOM`](SongodaPluginBOM/pom.xml) | Shared dependency versions imported by active Songoda plugins. |
 
 Read the [SongodaCore documentation](SongodaCore/README.md) for requirements, build instructions, consumption, shading,
 relocation, and plugin integration. Read the [Licensing-API documentation](Licensing-API/README.md) for verification,
 development licenses, caching, and rollout guidance.
+
+## Using the Songoda plugin BOM
+
+Active plugin projects import `com.songoda:SongodaPluginBOM:1.0.0-SNAPSHOT` in
+`dependencyManagement`, then declare `com.songoda:SongodaCore` without a version. To
+change the shared Core version, update `songoda.core.version` in
+[`SongodaPluginBOM/pom.xml`](SongodaPluginBOM/pom.xml) and deploy the BOM snapshot.
 
 ## Build
 

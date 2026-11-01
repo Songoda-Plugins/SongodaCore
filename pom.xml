@@ -17,6 +17,7 @@
         <module>H2-Legacy-Migration</module>
         <module>SongodaCore</module>
         <module>Licensing-API</module>
+        <module>SongodaPluginBOM</module>
     </modules>
 
     <properties>
